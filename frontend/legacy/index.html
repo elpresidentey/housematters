@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Matters - Connect Landlords & Tenants</title>
+    <meta name="description"
+        content="House Matters connects landlords directly with house seekers, eliminating middlemen for transparent and affordable property rentals.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/hero.css">
+
+    <!-- Google Fonts - Inter (more reliable) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Playful Brand Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Backup font loading -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        /* Force font loading with higher specificity */
+        html,
+        body,
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+
+        /* Ensure font loads immediately */
+        .font-loaded {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+        
+        /* Brand font override (force playful brand text) */
+        .brand-text {
+            font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+    </style>
+
+    <!-- Font loading script -->
+    <script>
+        // Force font loading
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.classList.add('font-loaded');
+
+            // Check if font is loaded
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(function () {
+                    console.log('✅ Fonts loaded successfully');
+                    document.body.style.fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+                });
+            }
+
+            // Fallback font loading check
+            setTimeout(function () {
+                const testElement = document.createElement('div');
+                testElement.style.fontFamily = 'Inter';
+                testElement.style.fontSize = '16px';
+                testElement.innerHTML = 'Test';
+                testElement.style.position = 'absolute';
+                testElement.style.visibility = 'hidden';
+                document.body.appendChild(testElement);
+
+                const computedStyle = window.getComputedStyle(testElement);
+                if (computedStyle.fontFamily.includes('Inter')) {
+                    console.log('✅ Inter font is active');
+                } else {
+                    console.log('⚠️ Inter font not loaded, using fallback');
+                }
+
+                document.body.removeChild(testElement);
+            }, 1000);
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="brand-link">
+                    <h1 class="brand">
+                        <span class="brand-logo" aria-hidden="true">
+                            <!-- Inline SVG: House icon -->
+                            <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
+                                <title>House Matters</title>
+                                <path d="M12 3.172L3 10v10a1 1 0 001 1h6v-6h4v6h6a1 1 0 001-1V10l-9-6.828zM21 9.25l-9-6.75-9 6.75V6.5l9-6.75 9 6.75v2.75z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <span class="brand-text">House Matters</span>
+                    </h1>
+                </a>
+            </div>
+
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#properties" class="nav-link">Properties</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-auth">
+                <button class="btn btn-outline" id="login-btn">Login</button>
+                <button class="btn btn-primary" id="register-btn">Sign Up</button>
+            </div>
+
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="badge-icon">🏆</span>
+                        <span class="badge-text">Trusted by 10,000+ users</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        Find your
+                        <span class="title-highlight">perfect house</span>
+                        <br>without the hassle
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Connect directly with property owners and renters. Skip the middleman,
+                        save on fees, and discover your ideal place to call home.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#properties" class="btn btn-primary btn-large hero-btn-primary" id="find-property-btn">
+                            <span class="btn-icon">🔍</span>
+                            <span class="btn-text">Search Properties</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
+                        <a href="#contact" class="btn btn-outline btn-large hero-btn-outline" id="list-property-btn">
+                            <span class="btn-icon">📝</span>
+                            <span class="btn-text">List Your Property</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="hero-visual">
+                    <div class="hero-image-stack">
+                        <div class="hero-card hero-card-1">
+                            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Modern apartment" class="card-image" loading="lazy">
+                            <div class="card-overlay">
+                                <div class="card-price">$2,500/mo</div>
+                                <div class="card-title">Modern Apartment</div>
+                                <div class="card-location">📍 Downtown NYC</div>
+                            </div>
+                        </div>
+
+                        <div class="hero-card hero-card-2">
+                            <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Family home" class="card-image" loading="lazy">
+                            <div class="card-overlay">
+                                <div class="card-price">$3,200/mo</div>
+                                <div class="card-title">Family Home</div>
+                                <div class="card-location">📍 Austin, TX</div>
+                            </div>
+                        </div>
+
+                        <div class="hero-card hero-card-3">
+                            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Luxury penthouse" class="card-image" loading="lazy">
+                            <div class="card-overlay">
+                                <div class="card-price">$4,500/mo</div>
+                                <div class="card-title">Luxury Penthouse</div>
+                                <div class="card-location">📍 Miami, FL</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- Quick Search Section -->
+        <section class="quick-search" id="search">
+            <div class="container">
+                <div class="search-container">
+                    <h2 class="search-title">Find your perfect home</h2>
+                    <form class="search-form" id="property-search-form">
+                        <div class="search-inputs">
+                            <div class="search-field">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" name="location"
+                                    placeholder="Where do you want to live?">
+                            </div>
+                            <div class="search-field">
+                                <label for="property-type">Property Type</label>
+                                <select id="property-type" name="propertyType">
+                                    <option value="">Any type</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="house">House</option>
+                                    <option value="condo">Condo</option>
+                                    <option value="studio">Studio</option>
+                                </select>
+                            </div>
+                            <div class="search-field">
+                                <label for="price-range">Max Price</label>
+                                <select id="price-range" name="priceRange">
+                                    <option value="">Any price</option>
+                                    <option value="1000">Under $1,000</option>
+                                    <option value="2000">Under $2,000</option>
+                                    <option value="3000">Under $3,000</option>
+                                    <option value="5000">Under $5,000</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <span>🔍</span> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Properties Section -->
+        <section class="featured-properties" id="properties">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Featured properties</h2>
+                    <p class="section-subtitle">Discover amazing places to live, handpicked by our community</p>
+                </div>
+
+                <div class="properties-grid" id="properties-grid">
+                    <!-- Properties will be loaded here -->
+                    <div class="property-card">
+                        <div class="property-image">
+                            <div class="property-badge">Featured</div>
+                            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Modern 2BR apartment with city view" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$2,500<span>/month</span></div>
+                            <h3 class="property-title">Modern 2BR Apartment</h3>
+                            <p class="property-location">📍 Downtown, New York</p>
+                            <div class="property-features">
+                                <span class="feature">2 bed</span>
+                                <span class="feature">1 bath</span>
+                                <span class="feature">900 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.9 (23 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Cozy studio apartment near campus" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$1,800<span>/month</span></div>
+                            <h3 class="property-title">Cozy Studio Near Campus</h3>
+                            <p class="property-location">📍 University District, Boston</p>
+                            <div class="property-features">
+                                <span class="feature">Studio</span>
+                                <span class="feature">1 bath</span>
+                                <span class="feature">450 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.7 (15 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Family home with yard and modern exterior" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$3,200<span>/month</span></div>
+                            <h3 class="property-title">Family Home with Yard</h3>
+                            <p class="property-location">📍 Suburbs, Austin</p>
+                            <div class="property-features">
+                                <span class="feature">3 bed</span>
+                                <span class="feature">2 bath</span>
+                                <span class="feature">1,200 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">5.0 (8 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Luxury penthouse with city skyline view" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$4,800<span>/month</span></div>
+                            <h3 class="property-title">Luxury Penthouse</h3>
+                            <p class="property-location">📍 Manhattan, New York</p>
+                            <div class="property-features">
+                                <span class="feature">2 bed</span>
+                                <span class="feature">2 bath</span>
+                                <span class="feature">1,400 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.8 (12 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Modern kitchen and living area in loft apartment" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$2,100<span>/month</span></div>
+                            <h3 class="property-title">Industrial Loft</h3>
+                            <p class="property-location">📍 Arts District, Los Angeles</p>
+                            <div class="property-features">
+                                <span class="feature">1 bed</span>
+                                <span class="feature">1 bath</span>
+                                <span class="feature">800 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.6 (19 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <div class="property-badge">New</div>
+                            <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Charming townhouse with brick exterior" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$2,800<span>/month</span></div>
+                            <h3 class="property-title">Historic Townhouse</h3>
+                            <p class="property-location">📍 Georgetown, Washington DC</p>
+                            <div class="property-features">
+                                <span class="feature">3 bed</span>
+                                <span class="feature">2.5 bath</span>
+                                <span class="feature">1,100 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.9 (7 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Modern house exterior with large windows" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$3,500<span>/month</span></div>
+                            <h3 class="property-title">Contemporary Villa</h3>
+                            <p class="property-location">📍 Beverly Hills, California</p>
+                            <div class="property-features">
+                                <span class="feature">4 bed</span>
+                                <span class="feature">3 bath</span>
+                                <span class="feature">2,200 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">5.0 (14 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Cozy bedroom in shared apartment" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$1,200<span>/month</span></div>
+                            <h3 class="property-title">Shared Apartment Room</h3>
+                            <p class="property-location">📍 Mission District, San Francisco</p>
+                            <div class="property-features">
+                                <span class="feature">1 room</span>
+                                <span class="feature">Shared bath</span>
+                                <span class="feature">200 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.4 (26 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <div class="property-badge">Hot</div>
+                            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Luxury condo with floor-to-ceiling windows" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$4,200<span>/month</span></div>
+                            <h3 class="property-title">Luxury Condo</h3>
+                            <p class="property-location">📍 River North, Chicago</p>
+                            <div class="property-features">
+                                <span class="feature">2 bed</span>
+                                <span class="feature">2 bath</span>
+                                <span class="feature">1,300 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.9 (18 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <div class="property-image">
+                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                                alt="Beautiful house exterior with garden" class="property-img">
+                        </div>
+                        <div class="property-info">
+                            <div class="property-price">$2,900<span>/month</span></div>
+                            <h3 class="property-title">Garden House</h3>
+                            <p class="property-location">📍 Pearl District, Portland</p>
+                            <div class="property-features">
+                                <span class="feature">3 bed</span>
+                                <span class="feature">2 bath</span>
+                                <span class="feature">1,500 sqft</span>
+                            </div>
+                            <div class="property-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-text">4.7 (11 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-cta">
+                    <button class="btn btn-outline btn-large" id="view-all-properties">
+                        View all properties
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works" id="about">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">How it works</h2>
+                    <p class="section-subtitle">Getting started is simple and straightforward</p>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">🔍</div>
+                        <h3>Search & Discover</h3>
+                        <p>Browse through hundreds of verified properties or use our smart filters to find exactly what
+                            you're looking for.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">💬</div>
+                        <h3>Connect & Chat</h3>
+                        <p>Message property owners directly through our secure platform. Ask questions, schedule
+                            viewings, and get to know each other.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">🏠</div>
+                        <h3>Move In</h3>
+                        <p>Complete your application, handle payments securely, and move into your new home. It's that
+                            simple!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title">Why choose House Matters?</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏠</div>
+                        <h3>Direct connections</h3>
+                        <p>Connect directly with property owners and renters. No middlemen, no complications.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Transparent pricing</h3>
+                        <p>Save money with upfront pricing and no hidden fees. What you see is what you pay.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Secure platform</h3>
+                        <p>Your payments and personal information are protected with bank-level security.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⭐</div>
+                        <h3>Trusted community</h3>
+                        <p>Make informed decisions with verified reviews and ratings from real users.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">What our users say</h2>
+                    <p class="section-subtitle">Real stories from real people who found their perfect home</p>
+                </div>
+
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">"</div>
+                            <p>"House Matters made finding my apartment so easy. I connected directly with the landlord
+                                and saved hundreds in agent fees. The whole process was transparent and stress-free."
+                            </p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80"
+                                alt="Sarah Johnson" class="author-avatar">
+                            <div class="author-info">
+                                <div class="author-name">Sarah Johnson</div>
+                                <div class="author-role">Marketing Manager</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">"</div>
+                            <p>"As a landlord, I love how House Matters connects me directly with quality tenants. The
+                                review system helps me find reliable renters, and I don't have to pay hefty agent
+                                commissions."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80"
+                                alt="Mike Chen" class="author-avatar">
+                            <div class="author-info">
+                                <div class="author-name">Mike Chen</div>
+                                <div class="author-role">Property Owner</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-icon">"</div>
+                            <p>"The platform is incredibly user-friendly. I found my dream apartment in just two weeks,
+                                and the secure payment system gave me peace of mind throughout the process."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80"
+                                alt="Emily Rodriguez" class="author-avatar">
+                            <div class="author-info">
+                                <div class="author-name">Emily Rodriguez</div>
+                                <div class="author-role">Graduate Student</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to find your perfect home?</h2>
+                    <p class="cta-subtitle">Join thousands of happy renters and landlords who've made the switch to
+                        House Matters</p>
+                    <div class="cta-actions">
+                        <button class="btn btn-primary btn-large" id="cta-search-btn">
+                            Start searching
+                        </button>
+                        <button class="btn btn-outline btn-large" id="cta-list-btn">
+                            List your property
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <h3>House Matters</h3>
+                        <p>Connecting landlords and tenants directly, making renting simple, transparent, and
+                            affordable.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">📘</a>
+                            <a href="#" class="social-link">🐦</a>
+                            <a href="#" class="social-link">📷</a>
+                            <a href="#" class="social-link">💼</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Renters</h4>
+                    <ul class="footer-links">
+                        <li><a href="#search">Search Properties</a></li>
+                        <li><a href="#about">How It Works</a></li>
+                        <li><a href="#">Renter Resources</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Landlords</h4>
+                    <ul class="footer-links">
+                        <li><a href="#list-property">List Property</a></li>
+                        <li><a href="#">Landlord Resources</a></li>
+                        <li><a href="#">Property Management</a></li>
+                        <li><a href="#">Pricing Guide</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Trust & Safety</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2025 House Matters. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content">
+            <!-- Modal content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="./js/main.js"></script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,8 @@
+'use client';
+
+import { useEffect, useId, useRef, useState } from 'react';
+import Modal from './Modal';
+import SafeImage from './SafeImage';
+import { formatNaira, type Property } from '../lib/properties';
+import { factsFor, monthlyEstimate } from '../lib/cardFacts';
+import { BedIcon, BathIcon, AreaIcon, LocationIcon, CheckIcon, HomeIcon } from './Icons';

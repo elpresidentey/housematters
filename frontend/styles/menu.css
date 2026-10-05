@@ -1,0 +1,67 @@
+/* === Full-screen menu overlay (Huge-style) === */
+
+/* Toggle button: "Menu"/"Close" pill with animated burger */
+.menu-toggle { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid #cdd8c9; border-radius:999px; padding:7px 14px; cursor:pointer; font-size:12px; font-weight:600; color:#20523d; transition:background .25s ease, border-color .25s ease, color .25s ease; position:relative; z-index:1002; min-height:34px; }
+.menu-toggle:hover { background:#ecf2e8; border-color:#17634a; }
+.menu-toggle-icon { display:inline-flex; flex-direction:column; gap:4px; width:14px; }
+.menu-toggle-icon span { display:block; height:2px; width:100%; background:currentColor; border-radius:2px; transition:transform .35s var(--homy-ease, cubic-bezier(.22,1,.36,1)), opacity .25s ease; }
+.menu-toggle.active { background:#17634a; border-color:#17634a; color:#fff; }
+.menu-toggle.active .menu-toggle-icon span:first-child { transform:translateY(3.5px) rotate(45deg); }
+.menu-toggle.active .menu-toggle-icon span:last-child { transform:translateY(-3.5px) rotate(-45deg); }
+
+/* When overlay is open, keep navbar chrome visible above it */
+.navbar-open { background:transparent !important; backdrop-filter:none !important; border-color:transparent !important; box-shadow:none !important; z-index:1002; }
+.navbar-open .brand-text, .navbar-open .brand-logo { color:#fff; }
+
+/* The overlay panel itself */
+.menu-overlay { position:fixed; inset:0; background:#123e30; z-index:1001; clip-path:inset(0 0 100% 0); visibility:hidden; transition:clip-path .65s var(--homy-ease, cubic-bezier(.22,1,.36,1)), visibility 0s .65s; }
+.menu-overlay.open { clip-path:inset(0 0 0% 0); visibility:visible; transition:clip-path .65s var(--homy-ease, cubic-bezier(.22,1,.36,1)), visibility 0s 0s; }
+
+.menu-overlay-inner { height:100%; max-width:1240px; margin:0 auto; padding:140px 32px 48px; display:flex; flex-direction:column; justify-content:space-between; overflow-y:auto; overflow-x:hidden; }
+
+/* Oversized staggered links */
+.menu-links { display:flex; flex-direction:column; }
+.menu-link { display:flex; align-items:baseline; gap:28px; text-decoration:none; padding:18px 0; border-bottom:1px solid #ffffff1a; opacity:0; transform:translateY(40px); transition:opacity .6s var(--homy-ease, cubic-bezier(.22,1,.36,1)), transform .6s var(--homy-ease, cubic-bezier(.22,1,.36,1)); }
+.menu-overlay.open .menu-link { opacity:1; transform:none; }
+.menu-link-index { font-size:13px; font-weight:700; letter-spacing:2px; color:#e9c767; min-width:34px; }
+.menu-link-label { font-family:'Cabin',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-weight:700; font-size:clamp(28px,5.2vw,58px); letter-spacing:-1.2px; line-height:1.08; color:#f2f5ec; transition:color .3s ease, transform .45s var(--homy-ease, cubic-bezier(.22,1,.36,1)); overflow-wrap:anywhere; text-wrap:balance; }
+.menu-link-arrow { margin-left:auto; font-size:clamp(24px,3vw,40px); color:#e9c767; opacity:0; transform:translateX(-16px); transition:opacity .3s ease, transform .45s var(--homy-ease, cubic-bezier(.22,1,.36,1)); }
+.menu-link:hover .menu-link-label { color:#e9c767; transform:translateX(14px); }
+.menu-link:hover .menu-link-arrow { opacity:1; transform:translateX(0); }
+
+/* Footer of the overlay */
+.menu-footer { display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; opacity:0; transform:translateY(24px); transition:opacity .6s var(--homy-ease, cubic-bezier(.22,1,.36,1)), transform .6s var(--homy-ease, cubic-bezier(.22,1,.36,1)); }
+.menu-overlay.open .menu-footer { opacity:1; transform:none; }
+.menu-footer-eyebrow { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#a9c4b2; margin-bottom:14px; }
+.menu-footer-link { display:block; color:#f2f5ec; text-decoration:none; font-size:15px; margin-top:8px; transition:color .2s ease; }
+.menu-footer-link:hover { color:#e9c767; }
+/* Account actions live inside the menu — Login + Sign Up */
+.menu-account-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
+.menu-btn { border-radius:999px; padding:14px 28px; font-size:14px; font-weight:700; cursor:pointer; border:1px solid transparent; transition:background .25s ease, color .25s ease, border-color .25s ease, transform .3s var(--homy-ease, cubic-bezier(.22,1,.36,1)); }
+.menu-btn-outline { background:transparent; border-color:#ffffff55; color:#f2f5ec; }
+.menu-btn-outline:hover { background:#ffffff18; border-color:#e9c767; color:#e9c767; transform:translateY(-2px); }
+.menu-btn-primary { background:#e9c767; border-color:#e9c767; color:#123e30; }
+.menu-btn-primary:hover { background:#f2d77e; transform:translateY(-2px); }
+
+/* The inline .nav-menu is removed; the Menu toggle is the single nav system */
+.nav-menu { display:none; }
+
+/* Anchor targets must clear the fixed navbar when jumped to from the menu */
+#home, #top-properties, #services, #properties, #about, #rental-guide, #reviews, #faq, #contact { scroll-margin-top:112px; }
+
+/* Mobile: keep the oversized links inside the viewport (no horizontal overflow) */
+@media (max-width:640px) {
+  .menu-overlay-inner { padding:118px 22px 40px; }
+  .menu-link { gap:14px; padding:14px 0; }
+  .menu-link-arrow { display:none; }
+  .menu-link-index { min-width:26px; font-size:12px; }
+  .menu-footer { flex-direction:column; gap:30px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .menu-overlay, .menu-overlay.open { transition:none; clip-path:none; }
+  .menu-overlay { visibility:hidden; opacity:0; }
+  .menu-overlay.open { visibility:visible; opacity:1; }
+  .menu-link, .menu-footer { opacity:1 !important; transform:none !important; transition:none; }
+}

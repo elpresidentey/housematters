@@ -1,0 +1,26 @@
+export function HomyStats() {
+  const reveal = useReveal<HTMLElement>();
+  const stats: Array<[number, string, string]> = [
+    [24, 'Total value listed', 'B+'],
+    [18, 'Active homes', ''],
+    [96, 'Happy searchers', '%'],
+  ];
+  return (
+    <section className="homy-stats" aria-label="Our impact" ref={reveal}>
+      <div className="container">
+        <p className="homy-eyebrow light">Our impact</p>
+        <h2>Real insight behind every property decision</h2>
+        <div className="homy-stats-grid">
+          {stats.map(([target, label, suffix]) => (
+            <StatCell key={label} target={target} label={label} suffix={suffix} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StatCell({ target, label, suffix }: { target: number; label: string; suffix: string }) {
+  const num = useCountUp(target);
+  return <div className="homy-stat"><strong><span ref={num}>0</span>{suffix}</strong><span>{label}</span></div>;
+}

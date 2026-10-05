@@ -1,0 +1,33 @@
+/* React controls and native dialog adaptations. Original styles remain separate. */
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+dialog.modal-overlay { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; }
+dialog.modal-overlay::backdrop { background: transparent; }
+.nav-toggle { background: transparent; border: 0; }
+.property-title-button { background: none; border: 0; padding: 0; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.property-title-button:hover { color: var(--primary-color); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 4px; }
+.property-detail-image img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.auth-error { color: var(--error-color); }
+.auth-success { color: var(--success-color); }
+.empty-state { text-align: center; padding: 2rem; }
+.notification { max-width: calc(100vw - 32px); min-width: 0; }
+.brand-text { font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; }
+@media (max-width: 768px) {
+  .nav-menu:not(.active) { visibility: hidden; pointer-events: none; }
+  .nav-menu.active { visibility: visible; pointer-events: auto; }
+}
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .hero-actions { flex-wrap: wrap; }
+  .hero-title .title-highlight { white-space: normal; }
+  .nav-container { gap: 8px; padding-inline: 12px; }
+  .nav-auth { gap: 4px; }
+  .nav-auth .btn { padding: 8px; font-size: 12px; }
+  .brand-text { font-size: 18px; }
+  .testimonials-grid { grid-template-columns: minmax(0, 1fr); }
+  .notification { right: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

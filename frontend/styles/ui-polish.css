@@ -1,0 +1,226 @@
+/* ==========================================================================
+   HOUSE MATTERS — UI POLISH (loaded last; wins the cascade)
+   One calm system on top of the historical stylesheets: tokens, unified
+   buttons/cards/inputs/navbar/dialog/toast, quiet reveal motion, sensible
+   responsive grids, and reduced-motion safety. No component changes needed.
+   ========================================================================== */
+
+:root {
+  --polish-nav-h: 50px;
+  --polish-ease: cubic-bezier(.22, 1, .36, 1);
+  --polish-shadow-sm: 0 1px 2px rgba(15, 38, 28, .06);
+  --polish-shadow-md: 0 14px 30px -16px rgba(15, 38, 28, .22);
+  --polish-shadow-lg: 0 30px 60px -26px rgba(15, 38, 28, .32);
+}
+
+/* --- Base rhythm -------------------------------------------------------- */
+html { scroll-padding-top: calc(var(--polish-nav-h) + 16px); }
+body { text-wrap: pretty; padding-top: var(--polish-nav-h); }
+main > section { scroll-margin-top: calc(var(--polish-nav-h) + 12px); }
+::selection { background: var(--brand, #17634a); color: #fff; }
+img { display: block; }
+
+/* --- Skip link + focus --------------------------------------------------- */
+.skip-link { z-index: 4000; }
+a:focus-visible, button:focus-visible, summary:focus-visible,
+[role="button"]:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 2.5px solid var(--brand, #17634a);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.menu-open { overflow: hidden; }
+.menu-open a:focus-visible, .menu-open button:focus-visible,
+.menu-overlay a:focus-visible, .menu-overlay button:focus-visible {
+  outline-color: var(--accent-live, #e9c767);
+}
+
+/* --- Navbar: single height, no overlap, no colour flicker ---------------- */
+.navbar {
+  position: fixed; inset: 0 0 auto 0;
+  min-height: var(--polish-nav-h);
+  display: flex; align-items: center;
+  background: rgba(255, 254, 250, .92);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line, #e5e9dd);
+  z-index: 1000;
+}
+.navbar-scrolled { box-shadow: 0 10px 30px -18px rgba(15, 38, 28, .22); }
+.nav-container { width: 100%; align-items: center; }
+.nav-brand .brand-text { white-space: nowrap; }
+.saved-pill { transition: transform .2s var(--polish-ease), background-color .2s ease; }
+.saved-pill:hover { transform: scale(1.05); }
+
+/* --- Buttons: one language, generous touch targets ----------------------- */
+.btn, .menu-btn, .homy-explore, .search-btn {
+  min-height: 46px;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 10px;
+  border-radius: var(--r-pill, 999px);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .25s var(--polish-ease), box-shadow .25s ease,
+    background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn:hover, .menu-btn:hover, .homy-explore:hover { transform: translateY(-2px); }
+.btn:active, .menu-btn:active, .homy-explore:active,
+.city-tabs button:active, .save-heart:active { transform: scale(.97); }
+.btn-primary { box-shadow: var(--polish-shadow-sm); }
+.btn-primary:hover { box-shadow: var(--polish-shadow-md); }
+.btn-outline { box-shadow: none; }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .6; cursor: not-allowed; transform: none; }
+
+/* --- Cards: calm hover, legible media ------------------------------------ */
+.property-card, .homy-card, .homy-service, .homy-review {
+  box-shadow: var(--polish-shadow-sm);
+  transition: transform .3s var(--polish-ease), box-shadow .3s ease, border-color .2s ease;
+}
+.property-card:hover, .homy-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--polish-shadow-md);
+}
+.property-image, .homy-card-media, .homy-service-media,
+.guide-photo, .property-detail-image { background: var(--paper-2, #f7f6ef); }
+.property-image img, .homy-card-media img, .homy-service-media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.property-card-luxury { border-color: var(--accent-live, #e9c767); }
+.property-badge-luxury {
+  background: #123e30 !important; color: #f2d77e !important;
+  border: 1px solid #e9c76766;
+}
+.save-heart { min-width: 38px; }
+.save-heart:focus-visible { outline-offset: 2px; }
+
+/* --- Search + toolbar: tidy grid, wrapping controls ----------------------- */
+.ng-search { margin-top: 0; padding-top: clamp(28px, 4vw, 52px); }
+.search-form { box-shadow: var(--polish-shadow-md); }
+.city-tabs button { min-height: 40px; }
+.city-tabs button.selected { font-weight: 700; }
+.listing-toolbar { flex-wrap: wrap; row-gap: 12px; }
+.toolbar-controls { flex-wrap: wrap; row-gap: 10px; }
+.luxury-toggle, .saved-toggle { min-height: 38px; }
+
+/* --- Forms: consistent fields + errors ------------------------------------ */
+.form-group input, .form-group select, .search-field input, .search-field select {
+  width: 100%;
+  font-size: 16px; /* stops iOS zoom-on-focus */
+  color: var(--ink, #0f261c);
+  background: #fff;
+}
+.form-group input::placeholder { color: var(--ink-4, #8a9a8d); }
+.auth-error[role="alert"], .auth-success[role="status"] { line-height: 1.6; }
+
+/* --- Dialogs: centred on every viewport, quiet backdrop -------------------- */
+dialog.modal-overlay {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  padding: clamp(12px, 3vw, 32px);
+  background: rgba(15, 38, 28, .55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  z-index: 2000;
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s ease, visibility 0s .3s;
+}
+dialog.modal-overlay.active, dialog.modal-overlay[open] {
+  opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s 0s;
+}
+dialog.modal-overlay::backdrop { background: rgba(15, 38, 28, .55); }
+.modal-content {
+  width: min(560px, 100%);
+  max-height: min(86dvh, 860px);
+  overflow: auto;
+  background: #fff;
+  border-radius: var(--r-md, 18px);
+  box-shadow: var(--polish-shadow-lg);
+}
+.modal-content:focus { outline: none; }
+.property-details { gap: 20px; }
+.property-detail-image { height: clamp(200px, 32vw, 300px); overflow: hidden; }
+.property-actions .btn { flex: 1 1 200px; }
+
+/* --- Toasts: stacked, bottom-anchored, never overlapping ------------------- */
+.toast-stack {
+  position: fixed;
+  left: 50%; transform: translateX(-50%);
+  bottom: max(20px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+  width: min(480px, calc(100vw - 32px));
+  z-index: 3000;
+  pointer-events: none;
+}
+.toast-stack .notification {
+  pointer-events: auto;
+  position: static;
+  width: 100%;
+  min-width: 0;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--r-sm, 12px);
+  font-size: 14px; font-weight: 600; line-height: 1.5;
+  color: #fff;
+  background: var(--brand, #17634a);
+  box-shadow: var(--polish-shadow-md);
+  animation: toast-in .35s var(--polish-ease) both;
+}
+.toast-stack .notification-error { background: #b3402a; }
+.toast-stack .notification-warning { background: #c98f1b; }
+.toast-stack .notification button {
+  margin-left: auto; flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+}
+.toast-stack .notification button:hover { background: #ffffff2e; }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(14px) scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* --- Reveal motion: calm default (JS adds .is-in) ---------------------------- */
+.hr { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--polish-ease), transform .7s var(--polish-ease); }
+.hr.is-in { opacity: 1; transform: none; }
+.hrc { opacity: 0; transform: translateY(28px); transition: opacity .6s var(--polish-ease) var(--stagger, 0ms), transform .6s var(--polish-ease) var(--stagger, 0ms); }
+.is-in .hrc { opacity: 1; transform: none; }
+
+/* --- Responsive consolidation ---------------------------------------------- */
+@media (max-width: 1024px) {
+  .properties-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .homy-stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  .homy-section-head { flex-direction: column; align-items: stretch; }
+  .homy-head-note { max-width: 60ch; }
+  .editorial-heading { flex-direction: column; align-items: stretch; }
+  .editorial-heading > p { max-width: 60ch; }
+  .toolbar-controls { width: 100%; }
+  .guide-grid, .homy-highlight-grid, .homy-faq-grid { grid-template-columns: 1fr; }
+  .ng-landlord { grid-template-columns: 1fr; }
+  .modal-content { width: 100%; }
+  .property-actions { flex-direction: column; }
+  .property-actions .btn { width: 100%; }
+}
+@media (max-width: 560px) {
+  .properties-grid, .homy-top-grid, .homy-services-grid, .homy-reviews-grid,
+  .homy-stats-grid, .ng-steps { grid-template-columns: 1fr; }
+  .search-inputs { grid-template-columns: 1fr; }
+  .search-btn { width: 100%; }
+  .homy-hero-actions { flex-direction: column; align-items: stretch; }
+  .homy-hero-actions .btn { width: 100%; }
+  .homy-cta-actions { display: flex; flex-direction: column; align-items: stretch; }
+  .homy-cta-actions .btn { width: 100%; }
+  .ng-actions { flex-wrap: wrap; }
+  .ng-actions .btn { flex: 1 1 220px; }
+}
+
+/* --- Reduced motion: static, fully legible --------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .hr, .hrc, .sw-word, .homy-spaced, .homy-hero-copy > *, .homy-hero-visual { opacity: 1 !important; transform: none !important; }
+  .toast-stack .notification { animation: none; }
+}
+
+/* --- Footer + misc sections ------------------------------------------------ */
+.ng-footer { overflow-wrap: anywhere; }
+.market-strip { flex-wrap: wrap; row-gap: 10px; }
+.empty-state { text-wrap: pretty; }

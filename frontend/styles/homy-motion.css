@@ -1,0 +1,215 @@
+/* Homy motion layer: reveals, micro-interactions, ambient animation (original) */
+
+:root {
+  --homy-ease: cubic-bezier(.22,1,.36,1);
+  --homy-spring: cubic-bezier(.22,1,.36,1);
+  --homy-expo: cubic-bezier(.16,1,.3,1);
+}
+
+/* Smooth in-page anchor scrolling */
+html { scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+
+/* Scroll reveal — IntersectionObserver adds .is-in */
+.hr { opacity:0; transform:translateY(28px); transition:opacity .7s var(--homy-ease), transform .7s var(--homy-ease); }
+.hr.is-in { opacity:1; transform:none; }
+.hr-1 { transition-delay:.08s; } .hr-2 { transition-delay:.16s; } .hr-3 { transition-delay:.24s; }
+
+/* Child-stagger reveal: container gets .is-in, children cascade */
+.hrc { opacity:0; transform:translateY(34px) scale(.985); transition:opacity .65s var(--homy-ease) var(--stagger,0ms), transform .65s var(--homy-ease) var(--stagger,0ms); will-change:opacity,transform; }
+.is-in .hrc { opacity:1; transform:none; }
+
+/* === Split-word headline reveal (masked rise, word cascade) === */
+.split-words { display:inline; }
+.sw-mask { display:inline-block; overflow:hidden; vertical-align:bottom; padding-bottom:.08em; margin-bottom:-.08em; }
+.sw-word { display:inline-block; transform:translateY(115%); transition:transform .75s var(--homy-ease); will-change:transform; }
+.sw-mask:not(:last-child) .sw-word::after { content:'\00a0'; }
+.is-in .sw-word, .homy-hero .sw-word { transform:translateY(0); }
+
+/* Letter-spaced subline: gentle fade + tracking settle */
+.homy-spaced { font-size:12px; letter-spacing:.42em; text-transform:uppercase; color:#8aa092; max-width:620px; line-height:2.1; margin:0 0 30px; opacity:0; transform:translateY(14px); transition:opacity .8s var(--homy-ease) .15s, transform .8s var(--homy-ease) .15s, letter-spacing 1.1s var(--homy-ease) .15s; }
+.homy-spaced.light { color:#a9c4b2; }
+.is-in .homy-spaced, .homy-hero .homy-spaced { opacity:1; transform:none; letter-spacing:.34em; }
+
+/* Hero entrance choreography */
+@keyframes homy-rise { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
+.homy-hero-copy > * { opacity:0; animation:homy-rise .8s var(--homy-ease) forwards; }
+.homy-hero-copy .homy-eyebrow { animation-delay:.05s; }
+.homy-hero-copy h1 { animation-delay:.15s; }
+.homy-hero-copy .homy-sub { animation-delay:.25s; }
+.homy-hero-copy .homy-hero-actions { animation-delay:.35s; }
+.homy-hero-copy .homy-hero-meta { animation-delay:.45s; }
+.homy-hero-visual { opacity:0; animation:homy-rise .9s var(--homy-ease) .25s forwards; }
+
+/* Floating hero cards */
+@keyframes homy-float { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-12px) rotate(-3deg); } }
+@keyframes homy-float-r { 0%,100% { transform:translateY(0) rotate(2deg); } 50% { transform:translateY(-10px) rotate(2deg); } }
+.homy-hero-card-a { animation:homy-float 6s ease-in-out infinite; }
+.homy-hero-card-b { animation:homy-float-r 7s ease-in-out infinite; }
+
+/* Ambient drifting blobs behind the hero */
+.homy-blob { position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; z-index:0; }
+.homy-blob-a { width:420px; height:420px; background:#dfedc7; opacity:.55; top:-120px; right:6%; animation:homy-drift 16s ease-in-out infinite; }
+.homy-blob-b { width:340px; height:340px; background:#e9c767; opacity:.28; bottom:-100px; left:-4%; animation:homy-drift 20s ease-in-out -8s infinite reverse; }
+@keyframes homy-drift { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(36px,-28px) scale(1.06); } }
+
+/* Parallax-tilt on hero + service/highlight imagery (JS sets --rx/--ry) */
+.homy-tilt { transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transition:transform .18s ease-out; will-change:transform; }
+
+/* Magnetic buttons (JS sets --mx/--my); spring back on leave */
+.homy-magnet { transform:translate(var(--mx,0px),var(--my,0px)); transition:transform .35s var(--homy-spring), background-color .2s ease, box-shadow .25s ease, color .2s ease, border-color .2s ease; will-change:transform; }
+
+/* Stats band: subtle number pop when revealed */
+@keyframes homy-pop { 0% { transform:scale(.9); opacity:.4; } 60% { transform:scale(1.04); } 100% { transform:scale(1); opacity:1; } }
+.homy-stats.is-in .homy-stat strong { animation:homy-pop .6s var(--homy-ease) both; }
+.homy-stats.is-in .homy-stat:nth-child(2) strong { animation-delay:.12s; }
+.homy-stats.is-in .homy-stat:nth-child(3) strong { animation-delay:.24s; }
+.homy-stat { transition:background-color .3s ease, border-color .3s ease, transform .3s var(--homy-ease); }
+.homy-stat:hover { background:#ffffff18; border-color:#ffffff38; transform:translateY(-3px); }
+
+/* Card micro-interactions */
+.homy-card { transition:transform .35s var(--homy-ease), box-shadow .35s ease, border-color .3s ease; }
+.homy-card:hover { border-color:#cfdcc8; }
+.homy-card .homy-explore { position:relative; overflow:hidden; transition:background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.homy-card .homy-explore span { transition:transform .25s var(--homy-ease); display:inline-block; }
+.homy-card .homy-explore:hover { background:#17634a; color:#fff; border-color:#17634a; box-shadow:0 8px 20px -8px #17634a88; }
+.homy-card .homy-explore:hover span { transform:translateX(3px); }
+.homy-card .homy-explore:active { transform:scale(.97); }
+/* Tenure badge pops in with the card */
+.homy-card .homy-tenure { transition:transform .3s var(--homy-spring), background .3s ease; }
+.homy-card:hover .homy-tenure { transform:translateY(2px) scale(1.05); }
+
+/* Service cards: sheen sweep + image zoom + number drift */
+.homy-service { position:relative; overflow:hidden; transition:transform .3s var(--homy-ease), box-shadow .3s ease; }
+.homy-service:hover { box-shadow:0 22px 44px -22px #133c3340; }
+.homy-service::after { content:''; position:absolute; inset:0; background:linear-gradient(120deg,transparent 30%,#ffffff40 50%,transparent 70%); transform:translateX(-120%); transition:transform .7s ease; pointer-events:none; }
+.homy-service:hover::after { transform:translateX(120%); }
+.homy-service-media img { transition:transform .6s var(--homy-ease); }
+.homy-service:hover .homy-service-media img { transform:scale(1.06); }
+.homy-service .homy-service-num { display:inline-block; transition:transform .3s var(--homy-spring), color .3s ease; }
+.homy-service:hover .homy-service-num { transform:translateX(6px) scale(1.12); color:#17634a; }
+.homy-service .text-action span { transition:transform .25s var(--homy-ease); display:inline-block; }
+.homy-service:hover .text-action span { transform:translateX(4px); }
+
+/* Highlight band: image zoom + chip hover */
+.homy-highlight-media { overflow:hidden; border-radius:20px; }
+.homy-highlight-media img { transition:transform .8s var(--homy-ease); }
+.homy-highlight:hover .homy-highlight-media img { transform:scale(1.04); }
+.homy-chip { transition:border-color .3s ease, background .3s ease, transform .3s var(--homy-ease); }
+.homy-chip:hover { border-color:#e9c76788; background:#e9c76718; transform:translateY(-2px); }
+
+/* Reviews: lift + star cascade pop */
+.homy-review { transition:transform .25s var(--homy-ease), box-shadow .25s ease, border-color .25s ease; }
+.homy-review:hover { transform:translateY(-4px); box-shadow:0 18px 36px -18px #133c3338; border-color:#d5dcc9; }
+.homy-review .homy-stars span { display:inline-block; transition:transform .25s var(--homy-spring); }
+.homy-review:hover .homy-stars span { transform:scale(1.15); }
+.homy-review:hover .homy-stars span:nth-child(2) { transition-delay:.04s; }
+.homy-review:hover .homy-stars span:nth-child(3) { transition-delay:.08s; }
+.homy-review:hover .homy-stars span:nth-child(4) { transition-delay:.12s; }
+.homy-review:hover .homy-stars span:nth-child(5) { transition-delay:.16s; }
+
+/* FAQ accordion polish */
+.homy-faq-item { transition:box-shadow .25s ease, border-color .25s ease, transform .25s var(--homy-ease); }
+.homy-faq-item:hover { border-color:#c9d6c3; transform:translateX(3px); }
+.homy-faq-item[open] { border-color:#b4c6b8; box-shadow:0 10px 26px -14px #133c3330; transform:none; }
+.homy-faq-item[open] summary span { transform:rotate(45deg); }
+.homy-faq-item summary { transition:color .2s ease; }
+.homy-faq-item summary:hover { color:#17634a; }
+.homy-faq-item summary span { transition:transform .3s var(--homy-spring); display:inline-block; }
+.homy-faq-item p { animation:homy-faq-in .35s var(--homy-ease); }
+@keyframes homy-faq-in { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+
+/* Button sheen on primary CTAs */
+.homy-hero-actions .btn, .homy-cta .btn, .homy-highlight-actions .btn { position:relative; overflow:hidden; }
+.homy-hero-actions .btn::before, .homy-cta .btn::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 30%, #ffffff33, transparent 60%); opacity:0; transition:opacity .3s ease; }
+.homy-hero-actions .btn:hover::before, .homy-cta .btn:hover::before { opacity:1; }
+/* Sweeping sheen on primary buttons removed for restraint (Huge-style minimalism) */
+
+/* Arrow nudge + growing underline on text-action links */
+.text-action { position:relative; display:inline-flex; align-items:center; gap:6px; }
+.text-action::after { content:''; position:absolute; left:0; right:100%; bottom:-3px; height:1.5px; background:currentColor; transition:right .3s var(--homy-ease); }
+.text-action:hover::after { right:0; }
+.text-action span { transition:transform .25s var(--homy-ease); display:inline-block; }
+.text-action:hover span { transform:translateX(4px); }
+
+/* CTA band shimmer */
+.homy-cta { position:relative; overflow:hidden; }
+.homy-cta::after { content:''; position:absolute; inset:-40%; background:linear-gradient(115deg,transparent 42%,#ffffff14 50%,transparent 58%); transform:translateX(-100%); animation:homy-shimmer 7s ease-in-out infinite; pointer-events:none; }
+@keyframes homy-shimmer { 0%,60% { transform:translateX(-100%); } 100% { transform:translateX(100%); } }
+
+/* Navbar polish: smooth hide/show + link underline + brand wiggle */
+.navbar { transition:transform .4s var(--homy-ease), background-color .3s ease, box-shadow .3s ease; }
+.navbar-scrolled { box-shadow:0 8px 28px -14px #133c3330; }
+.nav-link { position:relative; }
+.nav-link::after { content:''; position:absolute; left:12px; right:12px; bottom:4px; height:2px; border-radius:2px; background:#17634a; transform:scaleX(0); transform-origin:left; transition:transform .3s var(--homy-ease); }
+.nav-link:hover::after, .nav-link.active::after { transform:scaleX(1); }
+.brand-link { transition:transform .25s var(--homy-ease); display:inline-block; }
+.brand-link:hover { transform:translateY(-1px); }
+.brand-logo svg { transition:transform .3s var(--homy-spring); }
+.brand-link:hover .brand-logo svg { transform:rotate(-8deg) scale(1.06); }
+.saved-pill { transition:background .2s ease, transform .2s var(--homy-spring); }
+.saved-pill:hover { transform:scale(1.05); }
+
+/* Hero meta: avatar hover pop */
+.homy-avatars span { transition:transform .25s var(--homy-spring), box-shadow .25s ease; position:relative; }
+.homy-avatars:hover span { transform:translateY(-3px); }
+.homy-avatars span:hover { transform:translateY(-5px) scale(1.12); box-shadow:0 8px 16px -6px #133c3355; z-index:2; }
+
+/* Hero main image: slow settle zoom on load */
+.homy-hero-main { animation:homy-img-settle 1.4s var(--homy-ease) both; }
+@keyframes homy-img-settle { from { transform:scale(1.06); } to { transform:scale(1); } }
+
+/* === Custom cursor (Huge-style dot + trailing ring) === */
+.has-cursor, .has-cursor a, .has-cursor button, .has-cursor summary, .has-cursor [role="button"] { cursor:none; }
+/* Restore the correct native cursors where hiding them hurts usability */
+.has-cursor input, .has-cursor textarea, .has-cursor select, .has-cursor [contenteditable] { cursor:auto; }
+.has-cursor input[type="text"], .has-cursor input[type="email"], .has-cursor input[type="password"], .has-cursor input[type="search"], .has-cursor input[type="tel"], .has-cursor input[type="number"], .has-cursor textarea { cursor:text; }
+.cursor-dot, .cursor-ring { position:fixed; top:0; left:0; pointer-events:none; z-index:9999; border-radius:50%; will-change:transform; }
+.cursor-dot { width:6px; height:6px; margin:-3px 0 0 -3px; background:#17634a; }
+.cursor-ring { width:36px; height:36px; margin:-18px 0 0 -18px; border:1.5px solid #17634a66; display:grid; place-items:center; transition:width .3s var(--homy-ease), height .3s var(--homy-ease), margin .3s var(--homy-ease), background-color .3s ease, border-color .3s ease; }
+.cursor-ring.is-active { width:56px; height:56px; margin:-28px 0 0 -28px; border-color:#17634a; background:#17634a12; }
+.cursor-ring.is-label { width:84px; height:84px; margin:-42px 0 0 -42px; background:#123e30; border-color:#123e30; }
+.cursor-label { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#fff; opacity:0; transform:scale(.6); transition:opacity .25s ease, transform .3s var(--homy-spring); }
+.cursor-ring.is-label .cursor-label { opacity:1; transform:scale(1); }
+.cursor-ring.is-label ~ .cursor-dot, .cursor-ring.is-label + * .cursor-dot { opacity:0; }
+
+/* Park the custom cursor while any modal dialog is open. The lagging ring
+   makes precise clicks (login, booking, contact forms) feel broken, and the
+   hidden native pointer leaves users aiming blind. Native cursors return
+   everywhere until the dialog closes. */
+body:has(dialog[open]) .cursor-dot,
+body:has(dialog[open]) .cursor-ring { display:none; }
+body:has(dialog[open]),
+body:has(dialog[open]) a,
+body:has(dialog[open]) button,
+body:has(dialog[open]) summary,
+body:has(dialog[open]) [role="button"],
+body:has(dialog[open]) dialog,
+body:has(dialog[open]) dialog * { cursor:auto; }
+body:has(dialog[open]) dialog input[type="text"],
+body:has(dialog[open]) dialog input[type="email"],
+body:has(dialog[open]) dialog input[type="password"],
+body:has(dialog[open]) dialog input[type="search"],
+body:has(dialog[open]) dialog input[type="tel"],
+body:has(dialog[open]) dialog input[type="number"],
+body:has(dialog[open]) dialog textarea { cursor:text; }
+
+/* Inverse palette while the dark menu overlay is open (green-on-green was invisible) */
+.menu-open .cursor-dot { background:#e9c767; }
+.menu-open .cursor-ring { border-color:#e9c76788; }
+.menu-open .cursor-ring.is-active { border-color:#e9c767; background:#e9c7671f; }
+.menu-open .cursor-ring.is-label { background:#e9c767; border-color:#e9c767; }
+.menu-open .cursor-label { color:#123e30; }
+/* Focus rings must stay visible on the dark overlay */
+.menu-open a:focus-visible, .menu-open button:focus-visible, .menu-overlay a:focus-visible, .menu-overlay button:focus-visible { outline:2px solid #e9c767; outline-offset:4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hr, .hrc { opacity:1 !important; transform:none !important; transition:none; }
+  .sw-word { transform:none !important; transition:none; animation:none !important; }
+  .homy-spaced { opacity:1 !important; transform:none !important; letter-spacing:.34em; transition:none; }
+  .homy-hero-copy > *, .homy-hero-visual { animation:none !important; opacity:1 !important; }
+  .homy-hero-card-a, .homy-hero-card-b, .homy-cta::after, .homy-blob { animation:none !important; }
+  .homy-service::after, .btn-primary::after { display:none; }
+  .homy-magnet { transform:none !important; }
+  html { scroll-behavior:auto; }
+}

@@ -1,0 +1,262 @@
+const { Pool } = require('pg');
+const retry = require('retry');
+
+// Database configuration
+const dbConfig = {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    database: process.env.DB_NAME || 'house_matters',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    
+    // Enhanced pool settings
+    max: parseInt(process.env.DB_POOL_MAX) || 20,
+    idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT) || 30000,
+    connectionTimeoutMillis: parseInt(process.env.DB_CONNECTION_TIMEOUT) || 2000,
+    
+    // SSL configuration
+    ssl: process.env.NODE_ENV === 'production' ? {
+        rejectUnauthorized: false,
+        ca: process.env.DB_SSL_CA
+    } : false
+};
+
+// Create connection pool
+const pool = new Pool(dbConfig);
+
+// Retry operation configuration
+const retryOptions = {
+    retries: 3,
+    factor: 2,
+    minTimeout: 1000,
+    maxTimeout: 5000
+};
+
+// Handle pool errors
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err);
+    if (process.env.NODE_ENV === 'production') {
+        // In production, notify monitoring service
+        // notifyError(err);
+    } else {
+        process.exit(-1);
+    }
+});
+
+// Monitor pool status
+setInterval(() => {
+    const status = {
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount
+    };
+    
+    if (status.waitingCount > 5) {
+        console.warn('High number of waiting clients:', status);
+    }
+    
+    // Log pool status
+    console.log('Pool status:', status);
+}, 60000);
+
+// Test database connection with retry
+const testConnection = async () => {
+    const operation = retry.operation(retryOptions);
+    
+    return new Promise((resolve, reject) => {
+        operation.attempt(async (currentAttempt) => {
+            try {
+                const client = await pool.connect();
+                const result = await client.query('SELECT NOW()');
+                client.release();
+                
+                console.log('✅ Database connected successfully');
+                console.log(`📅 Database time: ${result.rows[0].now}`);
+                resolve(true);
+            } catch (error) {
+                console.error(`❌ Database connection attempt ${currentAttempt} failed:`, error.message);
+                
+                if (operation.retry(error)) {
+                    return;
+                }
+                
+                reject(operation.mainError());
+            }
+        });
+    });
+};
+
+// Enhanced query execution with retry and detailed logging
+const query = async (text, params = []) => {
+    const operation = retry.operation(retryOptions);
+    
+    return new Promise((resolve, reject) => {
+        operation.attempt(async (currentAttempt) => {
+            const start = Date.now();
+            
+            try {
+                const result = await pool.query(text, params);
+                const duration = Date.now() - start;
+                
+                // Log query execution
+                console.log({
+                    timestamp: new Date().toISOString(),
+                    type: 'QUERY_SUCCESS',
+                    duration,
+                    rowCount: result.rowCount,
+                    query: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
+                    attempt: currentAttempt
+                });
+                
+                resolve(result);
+            } catch (error) {
+                const duration = Date.now() - start;
+                
+                // Log query error
+                console.error({
+                    timestamp: new Date().toISOString(),
+                    type: 'QUERY_ERROR',
+                    duration,
+                    error: error.message,
+                    query: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
+                    attempt: currentAttempt
+                });
+                
+                // Determine if error is retryable
+                const isRetryable = [
+                    'connection timeout',
+                    'deadlock detected',
+                    'connection terminated'
+                ].some(msg => error.message.includes(msg));
+                
+                if (isRetryable && operation.retry(error)) {
+                    return;
+                }
+                
+                reject(operation.mainError() || error);
+            }
+        });
+    });
+};
+
+// Transaction helper with automatic rollback
+const transaction = async (callback) => {
+    const client = await pool.connect();
+    
+    try {
+        await client.query('BEGIN');
+        
+        // Add query method to client
+        const txClient = {
+            query: async (text, params = []) => {
+                const start = Date.now();
+                try {
+                    const result = await client.query(text, params);
+                    const duration = Date.now() - start;
+                    
+                    console.log({
+                        timestamp: new Date().toISOString(),
+                        type: 'TRANSACTION_QUERY',
+                        duration,
+                        rowCount: result.rowCount,
+                        query: text.substring(0, 100) + (text.length > 100 ? '...' : '')
+                    });
+                    
+                    return result;
+                } catch (error) {
+                    const duration = Date.now() - start;
+                    console.error({
+                        timestamp: new Date().toISOString(),
+                        type: 'TRANSACTION_ERROR',
+                        duration,
+                        error: error.message,
+                        query: text.substring(0, 100) + (text.length > 100 ? '...' : '')
+                    });
+                    throw error;
+                }
+            }
+        };
+        
+        const result = await callback(txClient);
+        await client.query('COMMIT');
+        return result;
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
+// Health check query
+const healthCheck = async () => {
+    try {
+        const result = await query('SELECT 1');
+        return result.rows[0] !== undefined;
+    } catch (error) {
+        console.error('Health check failed:', error);
+        return false;
+    }
+};
+
+module.exports = {
+    pool,
+    query,
+    transaction,
+    testConnection,
+    healthCheck
+};
+const transaction = async (callback) => {
+  const client = await getClient();
+  
+  try {
+    await client.query('BEGIN');
+    const result = await callback(client);
+    await client.query('COMMIT');
+    return result;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+// Close all connections (for graceful shutdown)
+const closePool = async () => {
+  try {
+    await pool.end();
+    console.log('✅ Database pool closed');
+  } catch (error) {
+    console.error('❌ Error closing database pool:', error.message);
+  }
+};
+
+// Database health check
+const healthCheck = async () => {
+  try {
+    const result = await query('SELECT 1 as health_check');
+    return {
+      status: 'healthy',
+      connected: true,
+      timestamp: new Date().toISOString()
+    };
+  } catch (error) {
+    return {
+      status: 'unhealthy',
+      connected: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    };
+  }
+};
+
+module.exports = {
+  pool,
+  query,
+  getClient,
+  transaction,
+  testConnection,
+  closePool,
+  healthCheck
+};

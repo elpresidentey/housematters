@@ -1,0 +1,198 @@
+/* Homy-inspired theme: light editorial + deep-green contrast bands. Original House Matters styling. */
+.homy-eyebrow { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#52715f; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+.homy-eyebrow.light { color:#bcd6c4; }
+.homy-dot { width:9px; height:9px; border-radius:50%; background:#17634a; display:inline-block; }
+.homy-eyebrow.light .homy-dot, .homy-dot.light { background:#e9c767; }
+/* ── Hero ────────────────────────────────────────────────────────── */
+.homy-hero {
+  min-height: calc(100vh - 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  padding: 48px 24px;
+}
+.homy-hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.homy-hero-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.homy-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(170deg, rgba(243,239,226,.88) 0%, rgba(251,249,241,.92) 50%, rgba(255,254,250,.95) 100%);
+}
+.homy-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  width: 100%;
+}
+.homy-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.homy-hero-copy h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -2.5px;
+  line-height: 1.06;
+  font-size: clamp(36px, 5vw, 68px);
+  color: #142e24;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.homy-hero-copy h1 .word { display: inline-block; }
+.homy-hero-copy h1 .word:nth-child(4) { color: #b8860b; }
+.homy-sub {
+  color: #5c6f63;
+  font-size: clamp(14px, 1.2vw, 17px);
+  line-height: 1.75;
+  max-width: 500px;
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+.homy-hero-actions { display: flex; gap: 14px; margin: 28px 0 32px; justify-content: center; flex-wrap: wrap; }
+.homy-hero-btn { transition: transform .25s ease, box-shadow .25s ease; }
+.homy-hero-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(23,99,74,.22); }
+.homy-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.homy-avatars { display: flex; }
+.homy-avatars span {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #17634a; color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: grid; place-items: center;
+  border: 2px solid #fbf9f1; margin-left: -10px;
+}
+.homy-avatars span:first-child { margin-left: 0; }
+.homy-avatars span:nth-child(2) { background: #b8860b; }
+.homy-avatars span:nth-child(3) { background: #52715f; }
+.homy-avatars span:nth-child(4) { background: #fff; color: #17634a; border: 2px solid #17634a; font-size: 10px; }
+.homy-hero-meta p strong { display: block; font-size: 13px; color: #142e24; }
+.homy-hero-meta span { font-size: 11px; color: #5c6f63; }
+.homy-saved-note { margin-left: 12px; padding-left: 14px; border-left: 1px solid #dfe4d6; }
+.homy-stats { background:#123e30; color:#f2f5ec; padding:72px 0; border-radius:28px; margin:10px auto 0; max-width:1240px; width:calc(100% - 44px); }
+.homy-stats h2 { font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-1px; font-size:clamp(26px,3vw,38px); max-width:560px; margin:0 0 34px; }
+.homy-stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.homy-stats .container, .homy-highlight .container { padding-inline:8px; }
+.homy-stat { background:#ffffff10; border:1px solid #ffffff22; border-radius:18px; padding:28px; }
+.homy-stat strong { display:block; font-size:clamp(28px,3vw,42px); font-weight:800; letter-spacing:-1px; color:#e9c767; }
+.homy-stat span { font-size:13px; color:#c6d4c8; }
+.homy-top { padding:96px 0 24px; }
+.homy-section-head { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:36px; }
+.homy-section-head h2 { font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-1px; font-size:clamp(28px,3.2vw,42px); color:#18392f; margin:0; }
+.homy-head-note { max-width:320px; color:#5c6f63; font-size:13px; line-height:1.7; }
+.homy-top-grid, .homy-services-grid, .homy-reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.homy-card { background:#fff; border:1px solid #e6ebdf; border-radius:20px; overflow:hidden; transition:transform .25s ease, box-shadow .25s ease; box-shadow:0 2px 10px -6px #133c3316; }
+.homy-card:hover { transform:translateY(-6px); box-shadow:0 24px 48px -20px #133c3344; }
+.homy-card-media { position:relative; height:250px; overflow:hidden; }
+.homy-card-media img { width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.homy-card:hover .homy-card-media img { transform:scale(1.05); }
+.homy-tenure { position:absolute; top:14px; left:14px; background:#123e30ee; color:#fff; font-size:11px; font-weight:700; padding:7px 13px; border-radius:999px; }
+.homy-card-body { padding:22px; }
+.homy-card-price { font-size:20px; font-weight:800; color:#142e24; letter-spacing:-.5px; }
+.homy-card-price span { font-size:12px; color:#5c6f63; font-weight:500; }
+.homy-card-body h3 { font-size:16px; margin:8px 0 4px; color:#18392f; }
+.homy-card-loc { font-size:12px; color:#5c6f63; margin-bottom:12px; }
+.homy-spec { display:flex; gap:16px; border-top:1px solid #edf0e6; border-bottom:1px solid #edf0e6; padding:10px 0; margin-bottom:14px; font-size:12px; color:#5c6f63; }
+.homy-spec strong { color:#142e24; }
+.homy-explore { border:1px solid #b4c6b8; background:transparent; color:#17634a; font-weight:700; font-size:13px; border-radius:999px; padding:10px 20px; cursor:pointer; }
+.homy-explore:hover { background:#ecf2e8; }
+.homy-services { padding:88px 0; }
+.homy-service { background:#f5f4eb; border-radius:20px; padding:18px 18px 24px; transition:transform .25s ease; }
+.homy-service:hover { transform:translateY(-5px); }
+.homy-service-media { border-radius:14px; overflow:hidden; height:220px; margin-bottom:18px; }
+.homy-service-media img { width:100%; height:100%; object-fit:cover; }
+.homy-service-num { font-size:12px; font-weight:800; color:#b8860b; letter-spacing:1px; }
+.homy-service h3 { font-size:19px; margin:6px 0 8px; color:#18392f; }
+.homy-service p { font-size:13px; color:#5c6f63; line-height:1.75; margin-bottom:14px; }
+
+.homy-highlight { background:#123e30; border-radius:28px; margin:20px auto; max-width:1240px; width:calc(100% - 44px); color:#f2f5ec; padding:70px 0; }
+.homy-highlight-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:center; }
+.homy-highlight-media img { width:100%; height:420px; object-fit:cover; border-radius:20px; }
+.homy-highlight-copy h2 { font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-1px; font-size:clamp(28px,3.2vw,42px); margin:0 0 16px; }
+.homy-highlight-copy p { color:#c6d4c8; font-size:14px; line-height:1.8; }
+.homy-highlight-actions { display:flex; align-items:center; gap:16px; margin-top:26px; flex-wrap:wrap; }
+.homy-chip { font-size:11px; font-weight:700; letter-spacing:1px; border:1px solid #ffffff33; border-radius:999px; padding:9px 15px; color:#e9c767; }
+.homy-reviews { padding:96px 0; }
+.homy-review { background:#fff; border:1px solid #e6ebdf; border-radius:20px; padding:26px; }
+.homy-stars { color:#b8860b; letter-spacing:2px; margin-bottom:14px; }
+.homy-review blockquote { font-size:14px; line-height:1.8; color:#33473c; margin:0 0 18px; }
+.homy-review figcaption strong { display:block; font-size:13px; color:#142e24; }
+.homy-review figcaption span { font-size:11px; color:#5c6f63; }
+.homy-faq { padding:24px 0 96px; }
+.homy-faq-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:48px; align-items:start; }
+.homy-faq-grid h2 { font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-1px; font-size:clamp(28px,3.2vw,42px); color:#18392f; margin:0 0 12px; }
+.homy-faq-item { border:1px solid #e2e7d8; border-radius:14px; margin-bottom:12px; background:#fff; overflow:hidden; }
+.homy-faq-item summary { list-style:none; cursor:pointer; padding:18px 20px; font-size:14px; font-weight:600; color:#18392f; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.homy-faq-item summary::-webkit-details-marker { display:none; }
+.homy-faq-item summary span { font-size:18px; color:#b8860b; font-weight:400; }
+.homy-faq-item p { padding:0 20px 20px; font-size:13px; color:#5c6f63; line-height:1.75; margin:0; }
+.homy-cta { background:linear-gradient(135deg,#17634a,#0e3a2b); border-radius:28px; padding:70px 40px; text-align:center; color:#fff; margin-bottom:80px; }
+.homy-cta h2 { font-family:'Fraunces',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,48px); letter-spacing:-1px; margin:0 0 14px; }
+.homy-cta p { color:#cfe0d3; max-width:520px; margin:0 auto 28px; font-size:14px; line-height:1.8; }
+.homy-cta .homy-hero-actions { justify-content:center; margin:0; }
+.btn-light { background:#fff; color:#123e30; border:1px solid #fff; }
+.btn-light:hover { background:#eef3ea; }
+.btn-ghost { background:transparent; color:#fff; border:1px solid #ffffff55; }
+.btn-ghost:hover { background:#ffffff18; }
+@media (max-width:1024px) {
+  .homy-highlight-grid, .homy-faq-grid { grid-template-columns:1fr; gap:40px; }
+  .homy-top-grid, .homy-services-grid, .homy-reviews-grid { grid-template-columns:repeat(2,1fr); }
+  .homy-stats, .homy-highlight { margin-inline:14px; }
+  .homy-stats-grid { grid-template-columns:1fr 1fr 1fr; }
+}
+
+/* === Design polish layer ===============================================
+   Typographic rhythm, numeric alignment and interaction affordances. */
+
+/* Balanced headline wrapping — avoids orphan words on every heading */
+.homy-hero-copy h1, .homy-section-head h2, .homy-faq-grid h2, .homy-stats h2,
+.homy-cta h2, .homy-highlight-copy h2, .editorial-heading h2, .guide-copy h2,
+.ng-landlord h2, .menu-link-label { text-wrap:balance; }
+/* Pretty wrapping for lead copy — avoids single-word last lines */
+.homy-sub, .homy-head-note, .homy-highlight-copy p, .hero-intro,
+.editorial-heading > p, .ng-landlord p:not(.eyebrow) { text-wrap:pretty; }
+
+/* Tabular figures so prices and stat counters don't jitter as they change */
+.homy-card-price, .property-price, .homy-stat strong, .homy-hero-card-b strong { font-variant-numeric:tabular-nums; }
+
+/* Brand-tinted text selection instead of the browser default */
+::selection { background:#17634a; color:#fff; }
+
+/* Cleaner taps on touch devices (no grey flash rectangle) */
+a, button, [role="button"], summary, .save-heart, .city-tabs button { -webkit-tap-highlight-color:transparent; }
+
+/* Visible, consistent focus treatment for keyboard users */
+button:focus-visible, a:focus-visible, summary:focus-visible, [role="button"]:focus-visible,
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline:2px solid #17634a; outline-offset:3px; border-radius:6px; }
+
+/* Whole card is a target, so give it a pointer and a matching focus ring */
+.property-card { position:relative; }
+.property-card:has(.property-image:focus-visible) { outline:2px solid #17634a; outline-offset:3px; }
+@media (max-width:768px) {
+  .homy-hero { min-height: calc(100svh - 50px); padding: 32px 20px; }
+  .homy-hero-copy h1 { font-size: clamp(28px, 8vw, 44px); letter-spacing: -1.5px; }
+  .homy-hero-actions { margin: 20px 0 24px; }
+  .homy-hero-meta { flex-wrap: wrap; gap: 12px; }
+  .homy-top-grid, .homy-services-grid, .homy-reviews-grid { grid-template-columns:1fr; }
+  .homy-stats-grid { grid-template-columns:1fr; }
+  .homy-section-head { flex-direction:column; align-items:flex-start; }
+  .homy-cta { padding:50px 24px; }
+}
+

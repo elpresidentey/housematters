@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Test - House Matters</title>
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .font-test {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .font-name {
+            font-weight: 600;
+            color: #FF385C;
+            margin-bottom: 0.5rem;
+        }
+        
+        .weight-300 { font-weight: 300; }
+        .weight-400 { font-weight: 400; }
+        .weight-500 { font-weight: 500; }
+        .weight-600 { font-weight: 600; }
+        .weight-700 { font-weight: 700; }
+        .weight-800 { font-weight: 800; }
+        .weight-900 { font-weight: 900; }
+        
+        .system-font {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .inter-font {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .comparison div {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Font Loading Test</h1>
+    
+    <div class="font-test">
+        <div class="font-name">Inter Font Weights Test</div>
+        <div class="weight-300 inter-font">Light 300: The quick brown fox jumps over the lazy dog</div>
+        <div class="weight-400 inter-font">Regular 400: The quick brown fox jumps over the lazy dog</div>
+        <div class="weight-500 inter-font">Medium 500: The quick brown fox jumps over the lazy dog</div>
+        <div class="weight-600 inter-font">SemiBold 600: The quick brown fox jumps over the lazy dog</div>
+        <div class="weight-700 inter-font">Bold 700: The quick brown fox jumps over the lazy dog</div>
+        <div class="weight-800 inter-font">ExtraBold 800: The quick brown fox jumps over the lazy dog</div>
+        <div class="weight-900 inter-font">Black 900: The quick brown fox jumps over the lazy dog</div>
+    </div>
+    
+    <div class="comparison">
+        <div>
+            <h3>System Font</h3>
+            <p class="system-font">This text uses system fonts (-apple-system, BlinkMacSystemFont, Segoe UI, Roboto). You should see a difference between this and the Inter font if Inter is loading properly.</p>
+        </div>
+        <div>
+            <h3>Inter Font</h3>
+            <p class="inter-font">This text uses Inter font. If Inter is loading correctly, this should look different from the system font - more rounded and modern with better letter spacing.</p>
+        </div>
+    </div>
+    
+    <div id="font-status" style="margin-top: 2rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
+        <strong>Font Status:</strong> <span id="status">Checking...</span>
+    </div>
+    
+    <script>
+        function checkFontLoading() {
+            const statusElement = document.getElementById('status');
+            
+            // Check if document.fonts API is available
+            if (document.fonts) {
+                document.fonts.ready.then(() => {
+                    const interLoaded = document.fonts.check('16px Inter');
+                    if (interLoaded) {
+                        statusElement.innerHTML = '✅ Inter font loaded successfully!';
+                        statusElement.style.color = 'green';
+                    } else {
+                        statusElement.innerHTML = '❌ Inter font failed to load';
+                        statusElement.style.color = 'red';
+                    }
+                });
+            } else {
+                // Fallback method
+                setTimeout(() => {
+                    const testElement = document.createElement('div');
+                    testElement.style.fontFamily = 'Inter, monospace';
+                    testElement.style.fontSize = '16px';
+                    testElement.innerHTML = 'Test';
+                    testElement.style.position = 'absolute';
+                    testElement.style.visibility = 'hidden';
+                    document.body.appendChild(testElement);
+                    
+                    const computedStyle = window.getComputedStyle(testElement);
+                    const fontFamily = computedStyle.fontFamily;
+                    
+                    if (fontFamily.includes('Inter')) {
+                        statusElement.innerHTML = '✅ Inter font appears to be loaded!';
+                        statusElement.style.color = 'green';
+                    } else {
+                        statusElement.innerHTML = '⚠️ Inter font may not be loaded (using fallback)';
+                        statusElement.style.color = 'orange';
+                    }
+                    
+                    document.body.removeChild(testElement);
+                }, 1000);
+            }
+        }
+        
+        // Check font loading when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkFontLoading);
+        } else {
+            checkFontLoading();
+        }
+        
+        // Also check after a delay to ensure fonts have time to load
+        setTimeout(checkFontLoading, 2000);
+    </script>
+</body>
+</html>

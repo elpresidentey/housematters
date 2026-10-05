@@ -1,0 +1,25 @@
+﻿  (last .homy-stat:hover rule -> .homy-stat:hover { background: none; transform: none; } .modal-content { padding: clamp(22px, 3vw, 34px); } .modal-conte)
+PASS  stat numerals oversized
+PASS  number span inherits (13px bug fixed)
+PASS  labels uppercase micro
+PASS  hairline dividers, no card chrome
+FAIL  hover chrome removed
+PASS  tabular numerals
+PASS  headline breathing room
+PASS  modal widened for detail
+PASS  price block panel
+PASS  price is ink (not lost in green)
+PASS  price tabular numerals
+PASS  location is context line (uppercase micro)
+PASS  disclaimer demoted to fine print
+PASS  actions separated by rule
+PASS  feature chips de-conflicted
+PASS  header rule added
+PASS  modal title promoted
+PASS  reading order: location before price
+PASS  reading order: disclaimer before actions
+PASS  disclaimer out of the price area
+PASS  zero mojibake
+PASS  18 cards intact
+
+1 FAILURES

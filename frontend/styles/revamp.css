@@ -1,0 +1,881 @@
+/* ==========================================================================
+   HOUSE MATTERS — DESIGN SYSTEM REVAMP
+   Loaded last so it normalises every earlier stylesheet into one system.
+   Goal: a deliberate visual hierarchy — clear type steps, one spacing
+   rhythm, one card language, and emphasis reserved for two moments only.
+   ========================================================================== */
+
+:root {
+  /* --- Surfaces: a quiet paper scale, no competing tints ---------------- */
+  --paper:      #fffefa;
+  --paper-2:    #f7f6ef;   /* one tinted register */
+  --paper-3:    #efeee3;   /* deeper tint, used sparingly */
+  --band:       #0f3c2d;   /* the single dark band colour */
+  --band-soft:  #1b5540;
+  --band-line:  #ffffff1f;
+
+  /* --- Ink: four steps create the hierarchy ----------------------------- */
+  --ink:        #0f261c;   /* headlines — maximum contrast */
+  --ink-2:      #33503f;   /* body */
+  --ink-3:      #5c6f63;   /* secondary / meta, AA on paper */
+  --ink-4:      #8a9a8d;   /* non-essential only, large text */
+  --ink-invert: #f3f6ef;
+  --ink-invert-2: #b9cbbd;
+
+  /* --- Lines ------------------------------------------------------------ */
+  --line:        #e5e9dd;
+  --line-strong: #d2dac9;
+
+  /* --- Brand + accent: accent split by role (text vs. dark bg) ---------- */
+  --brand:       #17634a;
+  --brand-hover: #104b38;
+  --accent:      #9a7514;  /* accent as TEXT on paper — passes AA */
+  --accent-live: #e9c767;  /* accent as a mark on the dark band only */
+
+  /* --- Type scale: seven deliberate steps ------------------------------- */
+  --fs-display: clamp(36px, 4.8vw, 60px);   /* hero only */
+  --fs-h2:      clamp(24px, 2.8vw, 36px);   /* major sections */
+  --fs-h2-sm:   clamp(20px, 1.8vw, 26px);   /* supporting sections */
+  --fs-h3:      clamp(16px, 1.3vw, 18px);  /* card / block titles */
+  --fs-lead:    15px;                     /* section intros */
+  --fs-body:    14px;
+  --fs-sm:      13px;
+  --fs-micro:   11px;                       /* eyebrows, labels */
+
+  /* --- Rhythm: one spacing scale ---------------------------------------- */
+  --sp-section: clamp(80px, 9vw, 120px);
+  --sp-block:   clamp(32px, 3.6vw, 48px);
+  --gutter:     clamp(24px, 4.5vw, 36px);
+
+  /* --- Radii: four steps ------------------------------------------------- */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-pill: 999px;
+
+  /* --- Elevation: three levels ------------------------------------------ */
+  --e1: 0 1px 2px rgba(15, 38, 28, .05);
+  --e2: 0 12px 28px -14px rgba(15, 38, 28, .18);
+  --e3: 0 30px 60px -26px rgba(15, 38, 28, .30);
+}
+
+/* --- Base --------------------------------------------------------------- */
+body { background: var(--paper); color: var(--ink-2); font-size: var(--fs-body); line-height: 1.75; font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.container { max-width: 1240px; padding-inline: var(--gutter); }
+h1, h2, h3, h4, h5, h6 { color: var(--ink); font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+p, span, div, button, input, select, label, a { font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+/* --- Type hierarchy ----------------------------------------------------- */
+/* Step 1 — hero display (loudest thing on the page) */
+/* Keep the hero headline readable on the dark photo: it must be light ink. */
+.homy-hero-copy h1 {
+  font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700;
+  font-size: var(--fs-display); line-height: 1.1; letter-spacing: -1.5px;
+  color: #fff; margin: 0 0 22px; text-shadow: 0 2px 24px rgba(8, 20, 14, .45);
+}
+.homy-hero-copy .homy-sub { color: rgba(255, 255, 255, .86); }
+.homy-hero-copy .homy-eyebrow { color: var(--accent-live); }
+.homy-hero-copy .homy-hero-meta p strong,
+.homy-hero-copy .homy-hero-proof p strong { color: #fff; }
+.homy-hero-copy .homy-hero-meta span,
+.homy-hero-copy .homy-hero-proof span { color: rgba(255, 255, 255, .82); }
+.homy-hero-copy .homy-avatars span { border-color: rgba(10, 26, 19, .55); }
+.homy-hero-copy .homy-avatars span:nth-child(4) { background: #fff; }
+.homy-hero-copy .homy-saved-note { border-left-color: #ffffff3d; }
+/* Step 2 — major section headings */
+.homy-section-head h2, .homy-faq-grid h2, .homy-stats h2,
+.editorial-heading h2, .guide-copy h2 {
+  font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700;
+  font-size: var(--fs-h2); line-height: 1.2; letter-spacing: -0.8px; color: var(--ink);
+}
+/* Step 3 — supporting sections sit one clear step below (real hierarchy) */
+.homy-highlight-copy h2, .ng-landlord h2 { font-size: var(--fs-h2-sm); letter-spacing: -0.6px; line-height: 1.25; font-weight: 700; }
+/* Step 4 — block titles */
+.homy-service h3, .homy-card-body h3, .ng-steps h3 { font-size: var(--fs-h3); font-weight: 600; color: var(--ink); letter-spacing: -0.3px; }
+/* Step 5 — lead copy */
+.homy-sub, .hero-intro, .homy-head-note, .editorial-heading > p,
+.guide-copy > p:not(.eyebrow), .ng-landlord p:not(.eyebrow), .homy-highlight-copy p {
+  font-size: var(--fs-lead); line-height: 1.65; color: var(--ink-2); font-weight: 400;
+}
+/* Step 6 — body & meta */
+.homy-card-loc, .property-location, .homy-review blockquote, .homy-faq-item p,
+.homy-service p, .ng-steps p, .guide-copy li { font-size: var(--fs-sm); line-height: 1.7; color: var(--ink-3); font-weight: 400; }
+/* Step 7 — eyebrow: the quietest, but always the first thing read */
+.homy-eyebrow, .eyebrow {
+  font-size: var(--fs-micro); font-weight: 600; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.homy-eyebrow.light, .ng-landlord .eyebrow, .homy-highlight-copy .homy-eyebrow { color: var(--accent-live); }
+/* The highlight section is paper now, so its eyebrow must be the dark accent */
+.homy-highlight .homy-eyebrow, .homy-highlight .homy-eyebrow.light { color: var(--accent); }
+.homy-highlight .homy-eyebrow .homy-dot { background: var(--accent); }
+.homy-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.homy-eyebrow.light .homy-dot { background: var(--accent-live); }
+
+/* ==========================================================================
+   SECTION RHYTHM & BAND SYSTEM
+   Every section shares one vertical rhythm. Emphasis is rationed: only two
+   dark bands exist on the page (proof + conversion); everything else is
+   paper, differentiated by a single tinted register.
+   ========================================================================== */
+
+/* One rhythm everywhere */
+.homy-top, .homy-services, .ng-properties, .ng-how, .ng-guide,
+.homy-reviews, .homy-faq { padding-block: var(--sp-section); }
+
+/* Hero: display moment — fits in viewport, clear of the fixed navbar above */
+.homy-hero {
+  min-height: calc(100vh - 50px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  padding: 48px 24px;
+}
+.homy-hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.homy-hero-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.homy-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 38, 28, 0.55) 0%, rgba(15, 38, 28, 0.68) 50%, rgba(15, 38, 28, 0.8) 100%);
+  z-index: 1;
+}
+.homy-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  width: 100%;
+}
+.homy-hero-copy {
+  max-width: 700px;
+  margin: 0 auto;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.homy-hero-copy .homy-eyebrow {
+  color: var(--accent-live);
+  justify-content: center;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.18em;
+  margin-bottom: 20px;
+}
+.homy-hero-copy .homy-sub {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--fs-lead);
+  line-height: 1.65;
+  margin-bottom: 28px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  max-width: 520px;
+}
+.homy-hero-copy .homy-eyebrow .homy-dot {
+  background: var(--accent-live);
+}
+.homy-hero-copy h1 {
+  color: #fff;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.homy-hero-copy .homy-sub {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--fs-lead);
+  line-height: 1.65;
+  margin-bottom: 28px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.homy-hero-actions {
+  margin: 0 auto 28px;
+  gap: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.homy-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding: 14px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  background: rgba(15, 38, 28, 0.35);
+  backdrop-filter: blur(6px);
+}
+.homy-hero-copy .btn-primary {
+  background: var(--accent-live);
+  border-color: var(--accent-live);
+  color: #123e30;
+  font-weight: 700;
+  text-shadow: none;
+}
+.homy-hero-copy .btn-primary:hover {
+  background: #d4b055;
+  border-color: #d4b055;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(233, 199, 103, 0.4);
+}
+.homy-hero-copy .btn-outline {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+.homy-hero-copy .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+.homy-hero-meta p {
+  font-size: var(--fs-sm);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.homy-hero-meta strong {
+  color: #fff;
+  font-weight: 700;
+}
+.homy-hero-meta span {
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.homy-saved-note {
+  color: var(--accent-live);
+}
+
+/* --- DARK BAND #1 — proof (stats) --------------------------------------- */
+/* Full-bleed chapter break, not a floating card: unambiguous hierarchy. */
+.homy-stats {
+  background: var(--band); color: var(--ink-invert);
+  margin: 0; width: 100%; max-width: none; border-radius: 0;
+  padding-block: clamp(64px, 7vw, 96px);
+}
+.homy-stats h2 { color: var(--ink-invert); max-width: 620px; }
+.homy-stats-grid { gap: 18px; margin-top: var(--sp-block); }
+.homy-stat {
+  background: #ffffff0a; border: 1px solid var(--band-line); border-radius: var(--r-md);
+  padding: clamp(22px, 2.6vw, 34px); transition: background .3s ease, transform .3s ease;
+}
+.homy-stat strong { display: block; font-size: clamp(30px, 3.4vw, 46px); font-weight: 700; letter-spacing: -1.4px; color: var(--accent-live); line-height: 1.05; }
+.homy-stat span { font-size: var(--fs-sm); color: var(--ink-invert-2); }
+
+/* --- Section headers: one consistent construction ----------------------- */
+.homy-section-head { align-items: flex-end; gap: 32px; margin-bottom: var(--sp-block); }
+.homy-section-head h2 { max-width: 32ch; }
+.homy-spaced { font-size: var(--fs-micro); letter-spacing: .2em; color: var(--ink-3); max-width: 58ch; margin: 0 0 var(--sp-block); line-height: 2; }
+.homy-head-note { max-width: 38ch; }
+.editorial-heading { margin-bottom: var(--sp-block); gap: 40px; align-items: flex-start; }
+.editorial-heading > p { max-width: 45ch; }
+
+/* --- Supporting register: the tinted bands ------------------------------ */
+.ng-how { background: var(--paper-2); }
+.homy-reviews { background: var(--paper-2); }
+
+/* --- Highlight: editorial image feature, NOT another dark band ---------- */
+.homy-highlight {
+  background: var(--paper); color: var(--ink-2); margin: 0; width: 100%; max-width: none;
+  border-radius: 0; padding-block: var(--sp-section);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.homy-highlight-grid { gap: clamp(32px, 4vw, 56px); }
+.homy-highlight-copy p { color: var(--ink-3); }
+.homy-highlight-media { border-radius: var(--r-md); }
+
+/* --- Owner CTA: secondary emphasis, so it stays light ------------------- */
+.ng-landlord {
+  background: var(--paper-2); color: var(--ink-2); margin: 0;
+  width: 100%; max-width: none; border-radius: 0; overflow: visible;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.ng-landlord > div { padding: clamp(40px, 5vw, 72px) var(--gutter); }
+.ng-landlord h2 { color: var(--ink); }
+.ng-landlord .eyebrow { color: var(--accent); }
+.ng-landlord p:not(.eyebrow) { color: var(--ink-3); }
+.ng-landlord small { color: var(--ink-3); }
+.ng-landlord img { border-radius: var(--r-md); min-height: 340px; }
+.ng-landlord .btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+/* ==========================================================================
+   CARD SYSTEM — one language across every card on the page
+   ========================================================================== */
+.homy-card, .property-card, .homy-service, .homy-review {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: var(--e1); overflow: hidden;
+  transition: transform .35s var(--homy-ease, cubic-bezier(.22,1,.36,1)),
+              box-shadow .35s ease, border-color .3s ease;
+}
+.homy-card:hover, .property-card:hover, .homy-review:hover {
+  transform: translateY(-4px); box-shadow: var(--e2); border-color: var(--line-strong);
+}
+.homy-service:hover { transform: translateY(-4px); box-shadow: var(--e2); }
+
+/* Enhanced card hover effects */
+.homy-card:hover .homy-card-media img, .property-card:hover .property-img {
+  transform: scale(1.05);
+}
+.homy-service:hover .homy-service-media img {
+  transform: scale(1.04);
+}
+
+/* ==========================================================================
+   TIER A — FEATURED HOMES ("Top properties")
+   Bigger, quieter and more editorial than the listing grid: fewer cards,
+   taller imagery, larger price, no feature clutter. This is why the two
+   property sections no longer read as duplicates.
+   ========================================================================== */
+.homy-top-grid { gap: clamp(20px, 2.4vw, 30px); }
+.homy-card-media { height: clamp(260px, 28vw, 360px); position: relative; overflow: hidden; }
+.homy-card-media img { transition: transform .7s var(--homy-ease, cubic-bezier(.22,1,.36,1)); width: 100%; height: 100%; object-fit: cover; }
+.homy-card-body { padding: clamp(20px, 2.2vw, 28px); display: flex; flex-direction: column; flex: 1; }
+.homy-card-price { font-size: clamp(18px, 1.8vw, 22px); font-weight: 700; letter-spacing: -0.6px; color: var(--ink); margin-bottom: 8px; }
+.homy-card-price span { font-size: var(--fs-sm); color: var(--ink-3); font-weight: 500; }
+.homy-card-body h3 { margin: 8px 0 10px; font-size: var(--fs-h3); line-height: 1.4; }
+.homy-card-body h3 button { background: none; border: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; width: 100%; }
+.homy-card-body h3 button:hover { text-decoration: underline; }
+.homy-card-loc { margin-bottom: 14px; font-size: var(--fs-sm); }
+.homy-tenure {
+  top: 12px; left: 12px; background: #fffdf6f2; color: var(--accent);
+  border: 1px solid #e6d9ae; font-size: var(--fs-micro); font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; padding: 6px 12px; border-radius: var(--r-pill);
+  position: absolute; z-index: 2;
+}
+.homy-spec { gap: 14px; padding: 12px 0; margin-bottom: 16px; border-color: var(--line); color: var(--ink-3); font-size: var(--fs-sm); }
+.homy-spec strong { color: var(--ink); font-weight: 700; }
+.homy-explore {
+  border: 1px solid var(--line-strong); background: transparent; color: var(--brand);
+  font-weight: 600; font-size: var(--fs-sm); border-radius: var(--r-pill);
+  padding: 10px 20px; cursor: pointer; min-height: 42px; margin-top: auto;
+  transition: background .25s ease, color .25s ease, border-color .25s ease, transform .2s ease;
+}
+.homy-explore:hover { background: var(--brand); color: #fff; border-color: var(--brand); transform: translateY(-1px); }
+.homy-explore:active { transform: translateY(0); }
+
+/* ==========================================================================
+   TIER B — LISTING GRID ("Property listings")
+   Denser and more utilitarian than the featured tier. Smaller radius,
+   tighter padding, restrained badges — the working index, not the showcase.
+   ========================================================================== */
+.properties-grid { gap: clamp(16px, 1.8vw, 24px); }
+.property-card { border-radius: var(--r-sm); display: flex; flex-direction: column; }
+.property-image { height: clamp(180px, 18vw, 220px); position: relative; overflow: hidden; }
+.property-img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--homy-ease, cubic-bezier(.22,1,.36,1)); }
+.property-info { padding: 18px; display: flex; flex-direction: column; flex: 1; }
+.property-location { font-size: var(--fs-micro); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+.property-title { font-size: var(--fs-h3); font-weight: 600; line-height: 1.4; margin-bottom: 10px; color: var(--ink); }
+.property-title-button { background: none; border: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; width: 100%; }
+.property-title-button:hover { text-decoration: underline; }
+.property-features { margin-bottom: 12px; }
+.property-features > span { font-size: var(--fs-micro); color: var(--ink-3); }
+.card-bottom { border-color: var(--line); padding-top: 12px; margin-top: auto; }
+.property-price { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; color: var(--ink); }
+.property-price span { font-size: var(--fs-micro); color: var(--ink-3); font-weight: 500; }
+.demo-label { font-size: var(--fs-micro); color: var(--ink-3); }
+/* Badge styles — defined in cards-modal.css */
+.property-badge-luxury { background: linear-gradient(135deg, #b8860b, #e9c767 55%, #b8860b) !important; color: #241a05; border: 0; letter-spacing: .3px; }
+
+/* Utility row above the grid */
+.city-tabs { gap: 8px; margin: 0 0 20px; }
+.city-tabs button {
+  border: 1px solid var(--line); color: var(--ink-3); background: #fff;
+  padding: 9px 17px; border-radius: var(--r-pill); font-size: var(--fs-sm);
+  cursor: pointer; min-height: 40px; transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.city-tabs button:hover { border-color: var(--line-strong); color: var(--ink); }
+.city-tabs button.selected { background: var(--brand); border-color: var(--brand); color: #fff; }
+.listing-toolbar { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 14px 0; margin-bottom: 26px; color: var(--ink-3); }
+.section-cta { margin-top: var(--sp-block); display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.inventory-note { font-size: var(--fs-sm); color: var(--ink-3); line-height: 1.7; max-width: 68ch; }
+.empty-state { border: 1px dashed var(--line-strong); border-radius: var(--r-md); background: var(--paper-2); padding: 48px 24px; text-align: center; }
+.empty-state h3 { font-size: var(--fs-h3); margin-bottom: 8px; }
+
+/* --- Services, reviews, FAQ adopt the same internal rhythm -------------- */
+.homy-service { padding: 16px 16px 24px; background: #fff; display: flex; flex-direction: column; }
+.homy-service-media { height: clamp(170px, 18vw, 220px); border-radius: var(--r-sm); margin-bottom: 16px; overflow: hidden; }
+.homy-service-media img { width: 100%; height: 100%; object-fit: cover; }
+.homy-service-num { font-size: var(--fs-micro); font-weight: 700; letter-spacing: .14em; color: var(--accent); margin-bottom: 8px; }
+.homy-service h3 { margin: 6px 0 8px; font-size: var(--fs-h3); }
+.homy-service p { margin-bottom: 14px; font-size: var(--fs-sm); line-height: 1.6; flex: 1; }
+.homy-review { padding: clamp(18px, 2.2vw, 26px); }
+.homy-stars { color: #b8860b; letter-spacing: 2px; margin-bottom: 12px; font-size: 12px; }
+.homy-review blockquote { margin: 0 0 16px; color: var(--ink-2); font-size: var(--fs-sm); line-height: 1.6; }
+.homy-review figcaption strong { display: block; font-size: var(--fs-sm); color: var(--ink); }
+.homy-review figcaption span { font-size: var(--fs-micro); color: var(--ink-3); }
+.homy-faq-grid { gap: clamp(28px, 3.5vw, 56px); }
+.homy-faq-item { border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; margin-bottom: 8px; }
+.homy-faq-item summary { padding: 16px 18px; font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
+.homy-faq-item summary span { color: var(--accent); font-size: 17px; }
+.homy-faq-item p { padding: 0 18px 18px; color: var(--ink-3); font-size: var(--fs-sm); }
+.homy-faq-item[open] { border-color: var(--line-strong); box-shadow: var(--e1); }
+
+/* Editorial steps + checklist share the body scale */
+.ng-steps { gap: clamp(28px, 3vw, 44px); margin-top: var(--sp-block); }
+.step-index { border-top: 1px solid var(--line-strong); padding-top: 18px; color: var(--ink-3); font-size: var(--fs-sm); }
+.guide-copy li { border-bottom: 1px solid var(--line); padding: 17px 0; }
+.guide-copy li > span { color: var(--accent); font-weight: 700; }
+.guide-photo img { border-radius: var(--r-md); height: clamp(400px, 44vw, 540px); }
+.guide-photo > span { border-radius: var(--r-sm); background: #0f3c2de6; font-size: var(--fs-body); }
+.homy-chip { border: 1px solid var(--line-strong); color: var(--accent); background: #fff; font-size: var(--fs-micro); letter-spacing: .1em; text-transform: uppercase; padding: 10px 16px; }
+
+/* ==========================================================================
+   BUTTON SYSTEM — three clear tiers, one geometry
+   ========================================================================== */
+.btn {
+  min-height: 48px; padding: 14px 26px; border-radius: 6px;
+  font-size: 14px; font-weight: 600; letter-spacing: -0.05px; gap: 10px;
+  border: 1px solid transparent; box-shadow: none;
+  transition: background .25s ease, color .25s ease, border-color .25s ease,
+              transform .2s var(--homy-ease, cubic-bezier(.22,1,.36,1)), box-shadow .25s ease;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.btn:hover::after { opacity: 1; }
+.btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-hover); border-color: var(--brand-hover); transform: translateY(-2px); box-shadow: 0 10px 24px -10px #17634a99; }
+.btn-primary:active { transform: translateY(0) scale(.98); }
+.btn-outline { background: #fff; border-color: var(--line-strong); color: var(--ink-2); }
+.btn-outline:hover { background: var(--paper-2); border-color: var(--brand); color: var(--brand); transform: translateY(-2px); }
+.btn-outline:active { transform: translateY(0) scale(.98); }
+.btn-light { background: #fff; border-color: #fff; color: var(--brand); }
+.btn-light:hover { background: var(--accent-live); border-color: var(--accent-live); color: #123e30; transform: translateY(-2px); }
+.btn-light:active { transform: translateY(0) scale(.98); }
+.btn-ghost { background: transparent; border-color: #ffffff44; color: #fff; }
+.btn-ghost:hover { background: #ffffff17; border-color: var(--accent-live); color: var(--accent-live); transform: translateY(-2px); }
+.btn-ghost:active { transform: translateY(0) scale(.98); }
+
+/* Disabled state for buttons */
+.btn:disabled, .btn[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.btn:disabled::after { opacity: 0; }
+
+/* Tertiary tier: text action with a ruled underline */
+.text-action { color: var(--brand); font-size: var(--fs-sm); font-weight: 700; gap: 8px; }
+.text-action::after { background: currentColor; height: 1px; }
+
+/* ==========================================================================
+   FORM SYSTEM — search is the primary tool, so it reads as one object
+   ========================================================================== */
+.ng-search { margin-top: -34px; }
+.ng-search .search-form {
+  padding: 24px; border-radius: var(--r-md); border: 1px solid var(--line);
+  background: #fff; box-shadow: var(--e2);
+}
+.ng-search .search-inputs { gap: 22px; align-items: end; }
+.ng-search .search-field { border-right: 1px solid var(--line); padding-right: 18px; }
+.search-field label { font-size: var(--fs-micro); letter-spacing: .12em; color: var(--ink-3); font-weight: 700; margin-bottom: 8px; }
+.ng-search input, .ng-search select {
+  padding: 9px 0; border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0;
+  font-size: var(--fs-body); color: var(--ink); background: transparent; transition: border-color .2s ease;
+}
+.ng-search input:focus, .ng-search select:focus { border-bottom-color: var(--brand); outline: none; }
+.ng-search .search-btn { min-height: 52px; padding-inline: 30px; }
+.ng-search input::placeholder { color: var(--ink-3); }
+
+/* --- HEADER — calmer, tighter, one hairline --------------------------- */
+.navbar { background: #fffefaf2; border-bottom: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(14px); }
+.navbar-scrolled { border-bottom-color: transparent; box-shadow: 0 10px 30px -18px rgba(15,38,28,.22); }
+.nav-container { height: 64px; max-width: 1240px; padding-inline: var(--gutter); }
+.brand-text { font-size: 20px; letter-spacing: -0.4px; font-weight: 700; font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.nav-brand .brand-logo { width: 26px; height: 26px; }
+.brand-link { color: var(--brand); }
+.menu-toggle { padding: 7px 14px; border-color: var(--line-strong); color: var(--ink-2); font-size: var(--fs-sm); min-height: 34px; font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.menu-toggle:hover { background: var(--paper-2); border-color: var(--brand); color: var(--brand); }
+.menu-toggle.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.saved-pill { background: #eef4ea; color: var(--brand); font-size: var(--fs-sm); padding: 7px 14px; min-height: 34px; border: 1px solid var(--line); font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.saved-pill:hover { background: #e3ecdd; }
+
+/* ==========================================================================
+   FOOTER — the quiet closing register
+   ========================================================================== */
+.ng-footer { background: var(--paper-2); border-top: 1px solid var(--line); padding: 56px 0 28px; }
+
+/* main footer grid */
+.footer-main { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: clamp(32px, 4vw, 56px); padding-bottom: 48px; }
+
+/* brand column */
+.footer-brand-col { display: flex; flex-direction: column; gap: 0; }
+.footer-wordmark { display: inline-block; text-decoration: none; font-size: 22px; letter-spacing: -0.6px; color: var(--ink); font-family: 'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; margin-bottom: 14px; }
+.footer-wordmark > span { color: var(--accent); }
+.footer-tagline { font-size: var(--fs-sm); color: var(--ink-3); line-height: 1.7; max-width: 32ch; margin-bottom: 20px; }
+
+/* contact */
+.footer-contact { margin-bottom: 22px; }
+.footer-contact-link { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--ink-2); text-decoration: none; transition: color .2s ease; }
+.footer-contact-link:hover { color: var(--brand); }
+.footer-contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--paper-3); color: var(--brand); font-size: 12px; font-weight: 700; }
+
+/* cities */
+.footer-cities-label { display: block; font-size: var(--fs-micro); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); font-weight: 600; margin-bottom: 10px; }
+.footer-city-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.footer-city-tag { padding: 4px 10px; border-radius: var(--r-pill); background: var(--paper); border: 1px solid var(--line); font-size: var(--fs-micro); color: var(--ink-3); font-weight: 500; transition: border-color .2s ease, color .2s ease; }
+.footer-city-tag:hover { border-color: var(--brand); color: var(--brand); }
+
+/* link columns */
+.footer-links-col { display: flex; flex-direction: column; gap: 0; }
+.footer-links-col h3 { font-size: var(--fs-micro); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); margin-bottom: 18px; font-weight: 600; }
+.footer-links-col a { display: block; font-size: var(--fs-sm); color: var(--ink-3); text-decoration: none; padding: 5px 0; transition: color .2s ease; }
+.footer-links-col a:hover { color: var(--brand); }
+.footer-note { font-size: var(--fs-micro); color: var(--ink-4); font-style: italic; margin-top: 4px; }
+
+/* bottom bar */
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-top: 1px solid var(--line-strong); padding-top: 22px; font-size: var(--fs-micro); color: var(--ink-3); flex-wrap: wrap; }
+.footer-bottom-links { display: flex; gap: 20px; }
+
+/* responsive */
+@media (max-width: 900px) {
+  .footer-main { grid-template-columns: 1fr 1fr; }
+  .footer-brand-col { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .footer-main { grid-template-columns: 1fr; gap: 32px; padding-bottom: 36px; }
+  .footer-brand-col { grid-column: auto; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+@media (max-width: 560px) {
+  .footer-main { grid-template-columns: 1fr; gap: 32px; padding: 40px 0 36px; }
+  .footer-brand-col { grid-column: auto; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .footer-band-text { font-size: var(--fs-body); }
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .homy-top-grid, .homy-services-grid, .homy-reviews-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .homy-stats, .homy-highlight, .ng-landlord { max-width: none; width: 100%; padding-inline: 0; }
+  .ng-landlord { grid-template-columns: 1fr; }
+  .ng-landlord img { min-height: 300px; }
+  .ng-search { margin-top: -20px; }
+}
+@media (max-width: 768px) {
+  .homy-hero {
+    min-height: calc(100svh - 50px);
+    padding: 32px 20px;
+  }
+  .homy-top-grid, .homy-services-grid, .homy-reviews-grid { grid-template-columns: 1fr; }
+  .homy-card-media { height: 260px; }
+  .homy-section-head { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .homy-section-head h2 { max-width: none; }
+  .editorial-heading { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .properties-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-brand-col { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .container { padding-inline: 20px; }
+  .homy-stats, .homy-highlight, .ng-landlord { border-radius: 0; }
+  .properties-grid { grid-template-columns: 1fr; }
+  .search-inputs { grid-template-columns: 1fr; }
+  .city-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; }
+  .city-tabs button { flex-shrink: 0; }
+  .listing-toolbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+
+/* ==========================================================================
+   FULL-BLEED BANDS
+   The stats / highlight / CTA sections are wrapped by containers in the
+   markup; neutralise those wrappers so the bands can span the viewport.
+   ========================================================================== */
+#main-content > .container:has(> .homy-cta) { max-width: none; padding-inline: 0; }
+.ng-landlord.container { max-width: none; padding-inline: 0; }
+
+/* Dark band internals stay inside the measured width */
+.homy-stats > .container, .homy-highlight > .container { max-width: 1240px; margin-inline: auto; padding-inline: var(--gutter); }
+
+/* CTA Section - redesigned */
+.homy-cta-section {
+  background: var(--band);
+  color: var(--ink-invert);
+  padding: clamp(80px, 10vw, 120px) 0;
+  margin-top: var(--sp-section);
+}
+.homy-cta {
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto;
+}
+.homy-cta .homy-eyebrow {
+  color: var(--accent-live);
+  margin-bottom: 20px;
+}
+.homy-cta .homy-eyebrow .homy-dot {
+  background: var(--accent-live);
+}
+.homy-cta h2 {
+  color: var(--ink-invert);
+  font-size: var(--fs-display);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.homy-cta-sub {
+  font-size: var(--fs-lead);
+  color: var(--ink-invert-2);
+  line-height: 1.7;
+  max-width: 540px;
+  margin: 0 auto 32px;
+}
+.homy-cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.homy-cta .btn-primary {
+  background: var(--accent-live);
+  border-color: var(--accent-live);
+  color: #123e30;
+}
+.homy-cta .btn-primary:hover {
+  background: #d4b055;
+  border-color: #d4b055;
+}
+.homy-cta .btn-outline {
+  background: transparent;
+  border-color: var(--band-line);
+  color: var(--ink-invert);
+}
+.homy-cta .btn-outline:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--accent-live);
+  color: var(--accent-live);
+}
+
+/* Motion-safe: bands are static surfaces, never transformed */
+@media (prefers-reduced-motion: reduce) {
+  .homy-stats, .homy-highlight, .homy-cta, .ng-landlord { transition: none; }
+}
+
+/* ==========================================================================
+   IMPACT BAND — number-first hierarchy
+   The stat "cards" dissolve into editorial figures: a hairline above each,
+   an oversized numeral, and a quiet uppercase label. The band reads:
+   eyebrow → headline → three ascending figures.
+   ========================================================================== */
+.homy-stats .homy-eyebrow { margin-bottom: 20px; }
+.homy-stats h2 { max-width: 21ch; margin-bottom: clamp(36px, 4.5vw, 60px); }
+.homy-stats-grid { gap: clamp(24px, 3.4vw, 44px); }
+
+.homy-stat {
+  background: transparent; border: 0; border-top: 1px solid var(--band-line);
+  border-radius: 0; padding: clamp(22px, 2.6vw, 30px) 0 0;
+  display: flex; flex-direction: column; gap: 12px;
+}
+/* The numeral is the loudest element inside the band */
+.homy-stat strong {
+  font-size: clamp(42px, 4.6vw, 66px); font-weight: 700; letter-spacing: -2.4px;
+  line-height: .95; color: var(--accent-live); font-variant-numeric: tabular-nums;
+}
+/* The old stylesheet shrank the number span to 13px — inherit from strong */
+.homy-stat strong span { font-size: inherit; color: inherit; letter-spacing: inherit; }
+/* The label steps back: small caps, tracked out, quiet */
+.homy-stat > span {
+  font-size: var(--fs-micro); font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-invert-2); line-height: 1.6;
+}
+/* No card chrome on hover — figures don't need it */
+.homy-stat:hover { background: transparent; transform: none; border-color: transparent; }
+
+/* ==========================================================================
+   DETAIL MODAL — reading order: context → price (hero) → details → actions
+   ========================================================================== */
+.modal-content { padding: clamp(22px, 3vw, 34px); }
+.modal-content:has(.property-details) { max-width: 560px; }
+.modal-header { padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+.modal-header h2 { font-size: clamp(19px, 2vw, 23px); font-weight: 600; letter-spacing: -.4px; line-height: 1.3; }
+
+.property-details { gap: 0; }
+.property-detail-image { height: clamp(220px, 26vw, 280px); border-radius: var(--r-sm); opacity: 1; }
+
+.property-detail-info { display: flex; flex-direction: column; margin-top: 24px; }
+
+/* Context line: quiet, tracked out */
+.property-detail-info .property-location {
+  font-size: var(--fs-micro); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 700; margin: 0 0 4px;
+}
+.property-detail-info .property-agency { font-size: var(--fs-sm); color: var(--ink-3); margin: 0; }
+
+/* Price block: the hero moment, set apart on a quiet panel */
+.detail-price-block {
+  margin: 16px 0 20px; padding: 18px 20px;
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm);
+}
+.property-detail-info .property-price {
+  font-size: clamp(28px, 3.2vw, 36px); font-weight: 700; letter-spacing: -1.2px;
+  color: var(--ink); margin: 0; line-height: 1.1; font-variant-numeric: tabular-nums;
+}
+.property-detail-info .property-price span { font-size: var(--fs-sm); color: var(--ink-3); font-weight: 500; letter-spacing: 0; }
+.detail-monthly { font-size: var(--fs-sm); color: var(--ink-3); margin: 8px 0 0; line-height: 1.6; }
+
+/* Feature chips */
+.property-detail-info .property-features { gap: 8px; margin: 0 0 20px; }
+.property-detail-info .property-features .feature {
+  font-size: var(--fs-micro); font-weight: 600; color: var(--ink-2);
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: var(--r-pill); padding: 6px 13px; margin: 0;
+}
+
+/* Description + support block */
+.property-description { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.8; margin: 0 0 20px; }
+.ask-block {
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm);
+  padding: 18px 20px; margin: 0 0 16px;
+}
+.ask-block h3 {
+  font-size: var(--fs-micro); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink); margin-bottom: 12px; font-weight: 700;
+}
+
+/* Fine print + actions: the modal closes on the decision */
+.detail-disclaimer { font-size: var(--fs-micro); color: var(--ink-3); line-height: 1.65; margin: 0 0 20px; }
+.property-actions { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--line); gap: 12px; }
+.property-actions .btn { min-height: 50px; }
+
+/* ==========================================================================
+   CARD SKELETON — the fix for "cards not looking the same"
+   Every card is a flex column with a pinned footer, so rows align
+   perfectly regardless of title, feature or quote length.
+   ========================================================================== */
+.homy-card, .property-card, .homy-service, .homy-review {
+  display: flex; flex-direction: column; min-width: 0;
+}
+.homy-card-media, .property-image, .homy-service-media, .homy-highlight-media { flex-shrink: 0; }
+.homy-card-body, .property-info { display: flex; flex-direction: column; flex: 1 1 auto; }
+
+/* Footers pin to the card bottom: price row, explore action, author line */
+.homy-card .homy-explore, .property-card .card-bottom { margin-top: auto; }
+.homy-service .text-action { margin-top: auto; align-self: flex-start; }
+.homy-review figcaption { margin-top: auto; }
+
+/* Kill the inline-image baseline gap (few px of stray space under photos) */
+img { display: block; }
+
+/* One shared image-zoom feel across both property tiers */
+.homy-card-media img, .property-img { transition: transform .6s var(--homy-ease, cubic-bezier(.22,1,.36,1)); }
+
+/* Services get the same hover lift as every other card */
+.homy-service:hover { transform: translateY(-4px); box-shadow: var(--e2); }
+
+/* ==========================================================================
+   REMAINING CONSISTENCY PASS
+   ========================================================================== */
+/* Modals join the radius system */
+.modal-content { border-radius: var(--r-md); }
+
+/* The sort select gets the same pill treatment as the city tabs */
+.listing-toolbar select {
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  padding: 8px 14px; font-size: var(--fs-sm); color: var(--ink-2);
+  background: #fff; cursor: pointer; transition: border-color .2s ease;
+}
+.listing-toolbar select:hover { border-color: var(--line-strong); }
+
+/* Toolbar toggles align with the select height */
+.luxury-toggle, .saved-toggle { min-height: 38px; }
+
+/* Featured explore action spans the card for a calmer, editorial footer */
+.homy-card .homy-explore { width: 100%; }
+
+/* Toast joins the radius + token system */
+.notification { border-radius: var(--r-sm); }
+
+/* Auth + detail modal inputs match the search-field treatment */
+.form-group input, .form-group select {
+  border: 1px solid var(--line-strong); border-radius: var(--r-xs);
+  padding: 13px 15px; font-size: var(--fs-body); color: var(--ink);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: var(--brand); box-shadow: 0 0 0 3px rgba(23, 99, 74, .12); outline: none;
+}
+.form-group label { font-size: var(--fs-sm); font-weight: 600; color: var(--ink); }
+
+/* Dialog chrome */
+.modal-header h2 { font-size: var(--fs-h3); letter-spacing: -.2px; color: var(--ink); }
+.modal-close { border-radius: var(--r-xs); width: 34px; height: 34px; display: grid; place-items: center; }
+.modal-close:hover { background: var(--paper-2); }
+
+/* ==========================================================================
+   HERO FIX — clear the 50px fixed navbar, keep the photo readable,
+   harden the fallback, and keep anchors clear of the header.
+   (Placed last so it wins over homy.css / motion / earlier revamp rules.)
+   ========================================================================== */
+.homy-hero {
+  /* Navbar is fixed at 64px — offset the hero instead of sliding under it. */
+  padding-top: calc(64px + clamp(48px, 7vw, 96px));
+  padding-bottom: clamp(56px, 7vw, 96px);
+  min-height: calc(100svh - 64px);
+  isolation: isolate;
+}
+/* The generic `img { display:block }` + `height:auto` rules in the base
+   styles collapse the absolute-fill hero photo — force the fill here. */
+.homy-hero-background { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.homy-hero-background .homy-hero-bg-image,
+img.homy-hero-bg-image {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; max-width: none;
+  object-fit: cover; object-position: center 38%;
+}
+/* Image fallback must also fill the hero frame, not collapse to a strip. */
+.homy-hero-background .image-fallback {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  background: linear-gradient(150deg, #0f3c2d 0%, #1b5540 55%, #0e3a2b 100%);
+  color: #f3f6ef;
+}
+.homy-hero-background .image-fallback span { color: #f3f6ef; font-size: 14px; }
+/* Keep copy above the overlay; overlay dark enough for white text on photo. */
+.homy-hero-content { position: relative; z-index: 2; }
+.homy-hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(10, 26, 19, 0.62) 0%, rgba(10, 26, 19, 0.52) 38%, rgba(10, 26, 19, 0.68) 100%);
+}
+.homy-hero-proof p { margin: 0; }
+.homy-hero-proof span { color: rgba(255, 255, 255, 0.82); font-size: var(--fs-sm); }
+.homy-hero-scroll {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 26px; font-size: var(--fs-micro); font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78); text-decoration: none;
+}
+.homy-hero-scroll span { color: var(--accent-live); }
+.homy-hero-scroll:hover { color: #fff; }
+/* Anchor jumps (#home / #search) must clear the fixed 50px navbar. */
+#home, #search { scroll-margin-top: 62px; }
+@media (max-width: 768px) {
+  .homy-hero { padding-top: calc(64px + 36px); padding-bottom: 56px; }
+  .homy-hero-scroll { display: none; }
+}

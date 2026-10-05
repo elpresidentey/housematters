@@ -1,0 +1,16 @@
+﻿node_modules
+dist
+.vscode
+*.log
+.DS_Store
+coverage
+.playwright
+
+# Next.js and test output
+.next/
+out/
+*.tsbuildinfo
+playwright-report/
+test-results/
+.env*
+!.env.example

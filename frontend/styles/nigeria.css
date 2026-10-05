@@ -1,0 +1,173 @@
+/* Nigeria-focused visual system */
+:root { --primary-color:#17634a; --primary-hover:#104b38; --primary-dark:#123e30; --secondary-color:#bbd5b0; --accent-color:#d8a768; --gradient-primary:linear-gradient(120deg,#17634a,#104b38); --gray-900:#18392f; --gray-800:#29473e; --gray-700:#476057; --gray-600:#61746b; --radius-xl:20px; }
+body { background:#fffefa; color:#203c32; }
+.container { max-width:1240px; padding-inline:32px; }
+a { color:inherit; }
+.navbar { background:#fffefa; box-shadow:none; border-bottom:1px solid #e8ebe2; }
+.nav-container { max-width:1240px; height:64px; padding-inline:32px; }
+.nav-brand .brand-text { font-family:'Cabin',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif !important; font-size:22px; letter-spacing:-0.4px; }
+.nav-brand .brand-logo { color:#17634a; }
+.nav-link { font-size:14px; font-weight:500; }
+.nav-auth .btn { padding:12px 22px; }
+.btn { border-radius:6px; font-weight:600; padding:15px 26px; box-shadow:none; gap:10px; font-size:14px; }
+.btn-primary { background:#17634a; border-color:#17634a; color:#fff; }
+.btn-primary:hover { background:#104b38; box-shadow:0 6px 18px #17634a20; }
+.btn-outline { background:transparent; color:#17634a; border-color:#b4c6b8; }
+.btn-outline:hover { background:#ecf2e8; color:#104b38; }
+.eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; font-weight:700; color:#52715f; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.country-mark { display:inline-block; width:22px; height:14px; background:linear-gradient(90deg,#17634a 33.33%,#fff 33.33%,#fff 66.66%,#17634a 66.66%); border:1px solid #17634a30; border-radius:2px; flex-shrink:0; }
+.ng-hero { padding-top:140px; background:#f5f4eb; }
+.ng-hero-grid { display:grid; grid-template-columns:1fr 1.05fr; gap:60px; align-items:center; }
+.ng-hero-copy { padding-block:30px 50px; }
+.ng-hero h1 { font-size:clamp(40px,4.5vw,64px); font-weight:500; letter-spacing:-3px; line-height:1.12; color:#18392f; margin-bottom:25px; }
+.ng-hero h1 em { font-family:'Cabin',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif !important; font-weight:700; color:#317455; }
+.hero-intro { color:#627168; font-size:16px; line-height:1.85; max-width:430px; }
+.ng-actions { display:flex; gap:28px; align-items:center; margin:30px 0 40px; }
+.text-action { border:0; background:none; color:#20523d; text-decoration:none; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+.hero-note { display:flex; align-items:center; gap:13px; }
+.note-symbol { font-size:28px; display:grid; place-items:center; width:44px; height:44px; border:1px solid #cdd8c9; border-radius:50%; }
+.hero-note strong { display:block; font-size:12px; font-weight:600; }
+.hero-note div > span { display:block; font-size:11px; color:#5f6f63; margin-top:4px; }
+.ng-hero-visual { position:relative; height:480px; margin-bottom:45px; }
+.hero-main-photo { width:100%; height:440px; object-fit:cover; border-radius:90px 16px 16px 16px; }
+.photo-tag { position:absolute; top:24px; right:20px; background:#fffef3eb; color:#2e4a3b; border-radius:30px; padding:9px 15px; font-size:10px; font-weight:600; }
+.hero-inset { position:absolute; bottom:0; left:-28px; width:240px; background:#fffefa; padding:8px; border-radius:13px; box-shadow:0 12px 30px #133c3320; transform:rotate(-4deg); }
+.hero-inset img { width:100%; height:150px; object-fit:cover; border-radius:8px; }
+.hero-inset > span { display:flex; justify-content:space-between; font-size:11px; font-weight:600; padding:12px 5px 5px; }
+.hero-caption { position:absolute; bottom:12px; right:3px; display:flex; align-items:center; gap:8px; color:#52705e; font-size:11px; }
+.market-strip { display:flex; justify-content:space-between; gap:15px; align-items:center; padding-block:28px 55px; color:#526c59; font-size:14px; border-top:1px solid #e1e5d8; }
+.market-strip > span:first-child { font-size:9px; letter-spacing:1.3px; color:#738272; }
+
+.ng-search { position:relative; margin-top:-27px; scroll-margin-top:110px; }
+.ng-search .search-form { max-width:none; padding:26px; border-radius:16px; border:1px solid #e0e6d9; box-shadow:0 16px 40px -18px #18392f22; background:#fff; }
+.ng-search .search-inputs { grid-template-columns:1.25fr 1fr 1fr auto; gap:24px; }
+.search-field label { text-transform:uppercase; font-size:10px; letter-spacing:1.3px; color:#294637; margin-bottom:10px; font-weight:700; }
+.ng-search input,.ng-search select { padding:10px 0; border:0; border-bottom:1.5px solid #d8e0d2; border-radius:0; font-size:14px; width:100%; color:#26413a; background:transparent; transition:border-color .2s ease; }
+.ng-search input:focus,.ng-search select:focus { border-bottom-color:#17634a; outline:none; }
+.ng-search .search-field { border-right:1px solid #e1e8dc; padding-right:18px; min-width:0; }
+.ng-search .search-btn { height:52px; }
+.ng-properties { padding-block:85px; }
+.editorial-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-bottom:34px; }
+.editorial-heading h2,.guide-copy h2,.ng-landlord h2 { font-size:clamp(30px,3vw,42px); font-weight:500; letter-spacing:-1.5px; line-height:1.18; }
+.editorial-heading > p { color:#728074; font-size:14px; line-height:1.8; max-width:320px; padding-bottom:6px; }
+.city-tabs { display:flex; flex-wrap:wrap; gap:8px; margin:34px 0 24px; }
+.city-tabs button { background:transparent; border:1px solid #dce4d8; color:#65766a; padding:10px 18px; border-radius:24px; font-size:12px; cursor:pointer; }
+.city-tabs button.selected,.city-tabs button:hover { background:#17634a; color:white; border-color:#17634a; }
+.listing-toolbar { display:flex; justify-content:space-between; gap:16px; align-items:center; font-size:12px; color:#5f6d63; margin-bottom:22px; }
+.listing-toolbar select { border:0; background:transparent; color:#304d3b; padding:8px; font-size:12px; }
+.properties-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:26px; }
+.property-card { border:1px solid #e2e8dd; box-shadow:none; border-radius:16px; cursor:default; background:#fff; min-width:0; }
+.property-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px #2946370c; }
+.property-image { height:220px; cursor:pointer; }
+.property-img { object-fit:cover; }
+/* badge styles moved to cards-modal.css */
+.photo-disclosure { position:absolute; bottom:10px; right:10px; font-size:10px; font-weight:600; color:#fff; padding:4px 8px; border-radius:4px; background:#173c32cc; }
+.property-info { padding:22px; }
+.property-location { color:#5f6f63; font-size:11px; margin-bottom:10px; }
+.property-title { font-size:16px; font-weight:600; line-height:1.5; margin-bottom:14px; }
+.property-title-button { display:flex; width:100%; align-items:center; justify-content:space-between; gap:8px; }
+.property-title-button > span { color:#17634a; flex-shrink:0; }
+.property-features { display:flex; flex-wrap:wrap; gap:0; margin-bottom:21px; }
+.property-features > span { font-size:10px; color:#5f6f63; padding-right:10px; margin-right:10px; border-right:1px solid #dce3d8; }
+.property-features > span:last-child { border:0; margin:0; padding:0; }
+.card-bottom { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #edf0e8; padding-top:16px; gap:6px; }
+.property-price { font-size:18px; font-weight:600; color:#264c37; margin:0; }
+.property-price span { font-size:11px; color:#859080; font-weight:400; }
+.demo-label { font-size:10px; color:#5f6d63; font-weight:600; letter-spacing:.2px; }
+.inventory-note { font-size:11px; color:#5f6d63; line-height:1.7; margin-top:16px; }
+.section-cta { margin-top:36px; }
+
+
+.ng-how { padding-block:75px; background:#edf1e7; }
+.ng-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; margin-top:48px; }
+.step-index { display:flex; justify-content:space-between; color:#719072; border-top:1px solid #c6d6c0; padding-top:18px; font-size:13px; }
+.ng-steps h3 { font-size:18px; font-weight:500; margin:25px 0 14px; }
+.ng-steps p { font-size:13px; line-height:1.9; color:#5c6f63; }
+.ng-guide { padding-block:90px; }
+.guide-grid { display:grid; grid-template-columns:1fr 1fr; gap:85px; align-items:center; }
+.guide-photo { position:relative; }
+.guide-photo img { width:100%; height:530px; object-fit:cover; border-radius:16px 90px 16px 16px; }
+.guide-photo > span { position:absolute; bottom:28px; left:25px; right:25px; border-radius:8px; padding:20px; color:#fff; background:#163d32dc; font-size:15px; }
+.guide-copy > p:not(.eyebrow) { margin-top:20px; font-size:14px; color:#5c6f63; line-height:1.85; }
+.guide-copy ul { list-style:none; margin:25px 0; }
+.guide-copy li { display:flex; align-items:flex-start; gap:17px; border-bottom:1px solid #e1e7db; padding:17px 0; font-size:12px; line-height:1.8; color:#61745f; }
+.guide-copy li > span { color:#32704b; font-size:11px; padding-top:2px; }
+.ng-landlord { padding:0; display:grid; grid-template-columns:1.15fr 1fr; margin-bottom:85px; border-radius:18px; overflow:hidden; background:#163f32; color:#f6f4e9; max-width:1176px; }
+.ng-landlord > div { padding:55px; }
+.ng-landlord .eyebrow { color:#b9d2a6; }
+.ng-landlord p:not(.eyebrow) { max-width:340px; color:#b6cbb5; font-size:13px; line-height:1.9; margin:20px 0 25px; }
+.ng-landlord .btn-primary { color:#173f31; background:#dfedc7; border-color:#dfedc7; }
+.ng-landlord small { display:block; color:#b6cbb5; font-size:10px; margin-top:15px; }
+.ng-landlord img { width:100%; height:100%; min-height:360px; object-fit:cover; }
+/* footer styles moved to revamp.css */
+.notification-info { background:#17634a; }
+.modal-content { border-radius:16px; }
+@media (max-width:1024px) {
+  .ng-hero-grid { gap:35px; }
+  .hero-caption { display:none; }
+  .ng-hero-visual { height:420px; }
+  .hero-main-photo { height:385px; }
+  .hero-inset { width:200px; }
+  .hero-inset img { height:120px; }
+  .ng-actions { gap:16px; }
+  .ng-search .search-inputs { grid-template-columns:1fr 1fr; }
+  .ng-search .search-field { border:0; }
+  .properties-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .guide-grid { gap:40px; }
+  .ng-landlord { margin-inline:32px; }
+  .ng-landlord > div { padding:35px; }
+}
+@media (max-width:768px) {
+  .container { padding-inline:22px; }
+  .nav-container { height:64px; padding-inline:18px; }
+  .nav-menu { top:64px; }
+  .nav-brand .brand-text { font-size:19px; }
+  .nav-auth .btn { padding:10px 14px; font-size:12px; min-height:40px; }
+  .ng-hero { padding-top:103px; }
+  .ng-hero-grid { grid-template-columns:1fr; gap:20px; }
+  .ng-hero-copy { padding-bottom:0; }
+  .ng-hero h1 { font-size:48px; letter-spacing:-2px; }
+  .hero-intro { max-width:100%; font-size:14px; }
+  .ng-actions { margin-bottom:25px; }
+  .hero-note { margin-bottom:15px; }
+  .ng-hero-visual { margin:15px 0 25px; height:370px; }
+  .hero-main-photo { height:335px; border-top-left-radius:65px; }
+  .hero-inset { left:10px; bottom:0; width:195px; }
+  .market-strip { flex-wrap:wrap; justify-content:flex-start; gap:15px 25px; padding-block:23px 50px; font-size:12px; }
+  .market-strip > span:first-child { width:100%; }
+  .ng-search .search-inputs { gap:18px; }
+  .ng-search .search-form { padding:20px; }
+  .ng-search .search-btn { width:100%; }
+  .ng-properties,.ng-guide { padding-block:55px; }
+  .editorial-heading { display:block; }
+  .editorial-heading > p { max-width:100%; margin-top:18px; }
+  .eyebrow { font-size:9px; }
+  .ng-steps { grid-template-columns:1fr; gap:30px; margin-top:30px; }
+  .ng-how { padding-block:50px; }
+  .ng-steps h3 { margin-top:18px; }
+  .guide-grid { grid-template-columns:1fr; gap:35px; }
+  .guide-photo img { height:360px; }
+  .ng-landlord { grid-template-columns:1fr; margin-inline:22px; margin-bottom:55px; padding:0; }
+  .ng-landlord > div { padding:30px; }
+  .ng-landlord img { height:260px; min-height:0; }
+  /* footer responsive moved to revamp.css */
+}
+@media (max-width:540px) {
+  .properties-grid { grid-template-columns:1fr; }
+  .ng-search .search-inputs { grid-template-columns:1fr; }
+  .ng-search .search-field { border-bottom:1px solid #e4eadd; padding-bottom:8px; }
+  .nav-brand .brand-text { font-size:17px; }
+  .nav-brand .brand-logo { width:23px; height:23px; }
+  .nav-container { gap:8px; padding-inline:12px; }
+  .nav-auth { gap:4px; }
+  .nav-auth .btn { padding:10px 13px; font-size:12px; min-height:44px; }
+  .listing-toolbar { font-size:10px; gap:6px; }
+  .listing-toolbar select { font-size:10px; padding:5px; max-width:135px; }
+  .city-tabs { gap:7px; }
+  .city-tabs button { padding:8px 13px; font-size:11px; }
+  .ng-hero h1 { font-size:43px; }
+  .ng-actions { flex-wrap:wrap; }
+  .hero-note strong { font-size:11px; }
+  .photo-tag { font-size:9px; right:12px; top:18px; }
+}
+
