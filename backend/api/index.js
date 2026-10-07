@@ -1,8 +1,10 @@
-// Vercel serverless entry point. Vercel routes every request for this project
-// here, and Express handles the paths from there.
+// Vercel serverless entry point. Vercel serves this file at /api and the
+// rewrite in vercel.json sends every other path here, so Express routes the
+// whole surface from one function.
+//
+// maxDuration cannot go in vercel.json alongside `functions`, and the Hobby
+// default of 10s is tight for queries against a pooled Postgres connection.
 const app = require('../app');
 
-// maxDuration cannot live in vercel.json while `builds` is in use, and the
-// Hobby default of 10s is tight for queries against a pooled Postgres.
 module.exports = app;
 module.exports.config = { maxDuration: 30 };
