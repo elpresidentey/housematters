@@ -1,12 +1,12 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
 const db = require('../config/database');
 
 // Get user profile
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
-        const result = db.query(
+        const result = await db.query(
             'SELECT id, email, first_name, last_name, phone, profile_image, is_verified, created_at, updated_at FROM users WHERE id = ?',
             [req.user.userId]
         );
@@ -28,17 +28,17 @@ router.get('/', authenticateToken, (req, res) => {
 });
 
 // Get public landlord/agent profile by id (contact card for a listing)
-router.get('/user/:id', authenticateToken, (req, res) => {
+router.get('/user/:id', authenticateToken, async (req, res) => {
     try {
-        const u = db.query(
+        const u = await db.query(
             'SELECT id, email, first_name, last_name, phone, profile_image, is_verified, role, created_at FROM users WHERE id = ?',
             [req.params.id]
         ).rows[0];
         if (!u) {
             return res.status(404).json({ success: false, error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
         }
-        const listingCount = db.query('SELECT COUNT(*) as c FROM properties WHERE landlord_id = ? AND active = 1', [u.id]).rows[0].c;
-        const rating = db.query('SELECT AVG(rating) as avg, COUNT(*) as c FROM reviews WHERE reviewee_id = ?', [u.id]).rows[0];
+        const listingCount = await db.query('SELECT COUNT(*) as c FROM properties WHERE landlord_id = ? AND active = 1', [u.id]).rows[0].c;
+        const rating = await db.query('SELECT AVG(rating) as avg, COUNT(*) as c FROM reviews WHERE reviewee_id = ?', [u.id]).rows[0];
         res.json({
             success: true,
             data: {
@@ -65,14 +65,14 @@ router.get('/user/:id', authenticateToken, (req, res) => {
 // Mark the signed-in user's phone as verified.
 // A production build must verify this via an SMS OTP; without a provider we
 // record the request and treat the number as unverified until confirmed.
-router.post('/verify/request', authenticateToken, (req, res) => {
+router.post('/verify/request', authenticateToken, async (req, res) => {
     try {
-        const u = db.query('SELECT phone FROM users WHERE id = ?', [req.user.userId]).rows[0];
+        const u = await db.query('SELECT phone FROM users WHERE id = ?', [req.user.userId]).rows[0];
         if (!u || !u.phone) {
             return res.status(400).json({ success: false, error: { code: 'NO_PHONE', message: 'Add a phone number to your profile first' } });
         }
-        db.query("UPDATE users SET is_verified = 1, updated_at = datetime('now') WHERE id = ?", [req.user.userId]);
-        const row = db.query('SELECT id, phone, is_verified FROM users WHERE id = ?', [req.user.userId]).rows[0];
+        await db.query("UPDATE users SET is_verified = 1, updated_at = now() WHERE id = ?", [req.user.userId]);
+        const row = await db.query('SELECT id, phone, is_verified FROM users WHERE id = ?', [req.user.userId]).rows[0];
         res.json({ success: true, data: { phone: row.phone, is_verified: !!row.is_verified } });
     } catch (error) {
         console.error('Verify request error:', error);
@@ -81,7 +81,7 @@ router.post('/verify/request', authenticateToken, (req, res) => {
 });
 
 // Update user profile
-router.put('/', authenticateToken, (req, res) => {
+router.put('/', authenticateToken, async (req, res) => {
     try {
         const { name, phone } = req.body;
         let firstName, lastName;
@@ -91,17 +91,17 @@ router.put('/', authenticateToken, (req, res) => {
             lastName = parts.slice(1).join(' ');
         }
 
-        db.query(
+        await db.query(
             `UPDATE users SET
                 first_name = COALESCE(?, first_name),
                 last_name = COALESCE(?, last_name),
                 phone = COALESCE(?, phone),
-                updated_at = datetime('now')
+                updated_at = now()
             WHERE id = ?`,
             [firstName || null, lastName || null, phone || null, req.user.userId]
         );
 
-        const result = db.query(
+        const result = await db.query(
             'SELECT id, email, first_name, last_name, phone, profile_image, created_at, updated_at FROM users WHERE id = ?',
             [req.user.userId]
         );
@@ -114,11 +114,11 @@ router.put('/', authenticateToken, (req, res) => {
 });
 
 // Get user's activity
-router.get('/activity', authenticateToken, (req, res) => {
+router.get('/activity', authenticateToken, async (req, res) => {
     try {
-        const bookings = db.query('SELECT * FROM bookings WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 5', [req.user.userId]);
-        const listings = db.query('SELECT * FROM properties WHERE landlord_id = ? AND active = 1 ORDER BY created_at DESC LIMIT 5', [req.user.userId]);
-        const messages = db.query(
+        const bookings = await db.query('SELECT * FROM bookings WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 5', [req.user.userId]);
+        const listings = await db.query('SELECT * FROM properties WHERE landlord_id = ? AND active = 1 ORDER BY created_at DESC LIMIT 5', [req.user.userId]);
+        const messages = await db.query(
             `SELECT m.*, u.first_name || ' ' || u.last_name as other_user_name
             FROM messages m
             JOIN users u ON (

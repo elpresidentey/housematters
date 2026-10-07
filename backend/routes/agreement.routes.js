@@ -35,9 +35,9 @@ function buildTerms({ property, tenant, landlord, annualRent, serviceCharge, cau
 }
 
 // GET /api/agreements — agreements involving the current user
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    const rows = db.query(
+    const rows = await db.query(
       `SELECT a.*, p.title as property_title, p.address, p.city, p.state,
               t.first_name || ' ' || t.last_name as tenant_name,
               l.first_name || ' ' || l.last_name as landlord_name
@@ -57,14 +57,14 @@ router.get('/', authenticateToken, (req, res) => {
 });
 
 // POST /api/agreements — landlord creates an agreement from a booking
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const { bookingId, serviceCharge = 0, cautionDeposit = 0, durationMonths = 12 } = req.body;
     if (!bookingId) {
       return res.status(400).json({ success: false, error: { code: 'MISSING_FIELD', message: 'bookingId is required' } });
     }
 
-    const booking = db.query(
+    const booking = await db.query(
       `SELECT b.*, p.landlord_id, p.title, p.address, p.city, p.state, p.rent
        FROM bookings b JOIN properties p ON b.property_id = p.id WHERE b.id = ?`,
       [bookingId],
@@ -79,13 +79,13 @@ router.post('/', authenticateToken, (req, res) => {
       return res.status(400).json({ success: false, error: { code: 'INVALID_STATUS', message: 'Confirm the booking before creating an agreement' } });
     }
 
-    const existing = db.query('SELECT id FROM agreements WHERE booking_id = ?', [bookingId]);
+    const existing = await db.query('SELECT id FROM agreements WHERE booking_id = ?', [bookingId]);
     if (existing.rows.length > 0) {
       return res.status(409).json({ success: false, error: { code: 'ALREADY_EXISTS', message: 'An agreement already exists for this booking' } });
     }
 
-    const tenant = db.query('SELECT * FROM users WHERE id = ?', [booking.tenant_id]).rows[0];
-    const landlord = db.query('SELECT * FROM users WHERE id = ?', [req.user.userId]).rows[0];
+    const tenant = await db.query('SELECT * FROM users WHERE id = ?', [booking.tenant_id]).rows[0];
+    const landlord = await db.query('SELECT * FROM users WHERE id = ?', [req.user.userId]).rows[0];
 
     const terms = buildTerms({
       property: { title: booking.title, address: booking.address, city: booking.city, state: booking.state },
@@ -96,13 +96,13 @@ router.post('/', authenticateToken, (req, res) => {
     });
 
     const id = uuidv4();
-    db.query(
+    await db.query(
       `INSERT INTO agreements (id, booking_id, tenant_id, landlord_id, property_id, annual_rent, service_charge, caution_deposit, duration_months, start_date, terms, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'sent')`,
       [id, bookingId, booking.tenant_id, req.user.userId, booking.property_id, booking.rent, serviceCharge, cautionDeposit, durationMonths, booking.requested_date, terms],
     );
 
-    const row = db.query('SELECT * FROM agreements WHERE id = ?', [id]).rows[0];
+    const row = await db.query('SELECT * FROM agreements WHERE id = ?', [id]).rows[0];
     res.status(201).json({ success: true, data: { agreement: row } });
   } catch (error) {
     console.error('Create agreement error:', error);
@@ -111,13 +111,13 @@ router.post('/', authenticateToken, (req, res) => {
 });
 
 // PUT /api/agreements/:id/status — tenant signs, either party voids
-router.put('/:id/status', authenticateToken, (req, res) => {
+router.put('/:id/status', authenticateToken, async (req, res) => {
   try {
     const { status } = req.body;
     if (!['draft', 'sent', 'signed', 'void'].includes(status)) {
       return res.status(400).json({ success: false, error: { code: 'INVALID_STATUS', message: 'Invalid status' } });
     }
-    const agreement = db.query('SELECT * FROM agreements WHERE id = ?', [req.params.id]).rows[0];
+    const agreement = await db.query('SELECT * FROM agreements WHERE id = ?', [req.params.id]).rows[0];
     if (!agreement) {
       return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Agreement not found' } });
     }
@@ -127,8 +127,8 @@ router.put('/:id/status', authenticateToken, (req, res) => {
     if (status === 'signed' && agreement.tenant_id !== req.user.userId) {
       return res.status(403).json({ success: false, error: { code: 'NOT_AUTHORIZED', message: 'Only the tenant can sign' } });
     }
-    db.query('UPDATE agreements SET status = ? WHERE id = ?', [status, req.params.id]);
-    const row = db.query('SELECT * FROM agreements WHERE id = ?', [req.params.id]).rows[0];
+    await db.query('UPDATE agreements SET status = ? WHERE id = ?', [status, req.params.id]);
+    const row = await db.query('SELECT * FROM agreements WHERE id = ?', [req.params.id]).rows[0];
     res.json({ success: true, data: { agreement: row } });
   } catch (error) {
     console.error('Update agreement error:', error);
@@ -137,9 +137,9 @@ router.put('/:id/status', authenticateToken, (req, res) => {
 });
 
 // GET /api/agreements/:id/print — plain-text agreement for download/print
-router.get('/:id/print', authenticateToken, (req, res) => {
+router.get('/:id/print', authenticateToken, async (req, res) => {
   try {
-    const row = db.query(
+    const row = await db.query(
       `SELECT a.*, p.title as property_title, p.address, p.city, p.state
        FROM agreements a JOIN properties p ON a.property_id = p.id WHERE a.id = ?`,
       [req.params.id],

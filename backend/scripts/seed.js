@@ -134,7 +134,8 @@ async function seedUsers(client) {
       userData.firstName,
       userData.lastName,
       userData.phone,
-      userData.isVerified
+      // The schema stores flags as INTEGER, so JS booleans have to be 0/1.
+      userData.isVerified ? 1 : 0
     ]);
     
     userIds.push({ id: userId, role: userData.role, email: userData.email });
@@ -173,10 +174,11 @@ async function seedProperties(client, userIds) {
       propertyData.rent,
       propertyData.bedrooms,
       propertyData.bathrooms,
-      propertyData.amenities,
+      // amenities is TEXT holding a JSON array, not a Postgres array.
+      JSON.stringify(propertyData.amenities),
       propertyData.latitude,
       propertyData.longitude,
-      true
+      1
     ]);
     
     propertyIds.push({ id: propertyId, landlordId: landlord.id, title: propertyData.title });
@@ -228,7 +230,7 @@ async function seedMessages(client, userIds, propertyIds) {
         isFromTenant ? landlord.id : tenant.id,
         property.id,
         message.content,
-        message.isRead
+        message.isRead ? 1 : 0
       ]);
     }
     

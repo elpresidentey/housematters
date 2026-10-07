@@ -1,14 +1,13 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
-const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { authenticateToken } = require('../middleware/auth');
 const { uploadSingle, uploadMultiple } = require('../middleware/upload');
+const { putImage, deleteImage } = require('../config/storage');
 
 // sharp is optional: resize when available, otherwise store the original.
-// (The native module is broken on some Windows runtimes — uploads must not
-// depend on it.)
+// It needs a native build, so it is loaded defensively and skipped if it fails.
 let sharp = null;
 try {
     sharp = require('sharp');
@@ -16,12 +15,14 @@ try {
     console.warn('sharp unavailable, storing original images:', e.message);
 }
 
-const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
 const ALLOWED_EXT = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp']);
+const CONTENT_TYPES = {
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp'
+};
 
 async function storeFile(file) {
     let ext = path.extname(file.originalname).toLowerCase();
@@ -43,9 +44,9 @@ async function storeFile(file) {
         }
     }
 
-    const fileName = `${uuidv4()}${finalExt}`;
-    fs.writeFileSync(path.join(UPLOAD_DIR, fileName), buffer);
-    return { url: `/uploads/${fileName}`, key: fileName };
+    const key = `${uuidv4()}${finalExt}`;
+    const stored = await putImage(buffer, key, CONTENT_TYPES[finalExt] || 'image/jpeg');
+    return { url: stored.url, key: stored.key };
 }
 
 // Upload multiple images (up to 10) — field name: "images"
@@ -97,21 +98,16 @@ router.post('/single', authenticateToken, uploadSingle('image'), async (req, res
 // Delete image
 router.delete('/:key', authenticateToken, async (req, res) => {
     try {
-        const fileName = path.basename(req.params.key);
-        const filePath = path.join(UPLOAD_DIR, fileName);
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({
-                success: false,
-                error: { code: 'NOT_FOUND', message: 'Image not found' }
-            });
-        }
-        fs.unlinkSync(filePath);
+        // basename() strips any traversal attempt before the key reaches storage.
+        const key = path.basename(req.params.key);
+        await deleteImage(key);
         res.json({ success: true, data: { message: 'Image deleted successfully' } });
     } catch (error) {
         console.error('Image deletion error:', error);
-        res.status(500).json({
+        const missing = /not found/i.test(error.message || '');
+        res.status(missing ? 404 : 500).json({
             success: false,
-            error: { code: 'DELETE_ERROR', message: 'Failed to delete image' }
+            error: { code: missing ? 'NOT_FOUND' : 'DELETE_ERROR', message: missing ? 'Image not found' : 'Failed to delete image' }
         });
     }
 });

@@ -1,16 +1,16 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
 const db = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 
 // Send a message
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     try {
         const { receiverId, message, propertyId } = req.body;
         const senderId = req.user.userId;
 
-        const receiverCheck = db.query('SELECT id FROM users WHERE id = ?', [receiverId]);
+        const receiverCheck = await db.query('SELECT id FROM users WHERE id = ?', [receiverId]);
         if (receiverCheck.rows.length === 0) {
             return res.status(404).json({ success: false, error: { code: 'USER_NOT_FOUND', message: 'Recipient not found' } });
         }
@@ -20,19 +20,19 @@ router.post('/', authenticateToken, (req, res) => {
         }
 
         if (propertyId) {
-            const propertyCheck = db.query('SELECT id FROM properties WHERE id = ? AND active = 1', [propertyId]);
+            const propertyCheck = await db.query('SELECT id FROM properties WHERE id = ? AND active = 1', [propertyId]);
             if (propertyCheck.rows.length === 0) {
                 return res.status(404).json({ success: false, error: { code: 'PROPERTY_NOT_FOUND', message: 'Property not found' } });
             }
         }
 
         const id = uuidv4();
-        db.query(
+        await db.query(
             'INSERT INTO messages (id, sender_id, receiver_id, content, property_id) VALUES (?, ?, ?, ?, ?)',
             [id, senderId, receiverId, message, propertyId || null]
         );
 
-        const result = db.query('SELECT * FROM messages WHERE id = ?', [id]);
+        const result = await db.query('SELECT * FROM messages WHERE id = ?', [id]);
         res.status(201).json({ success: true, data: { message: result.rows[0] } });
     } catch (error) {
         console.error('Send message error:', error);
@@ -41,12 +41,12 @@ router.post('/', authenticateToken, (req, res) => {
 });
 
 // Get conversation history with a user
-router.get('/conversations/:userId', authenticateToken, (req, res) => {
+router.get('/conversations/:userId', authenticateToken, async (req, res) => {
     try {
         const otherUserId = req.params.userId;
         const currentUserId = req.user.userId;
 
-        const messages = db.query(
+        const messages = await db.query(
             `SELECT m.*,
                 sender.first_name || ' ' || sender.last_name as sender_name,
                 sender.email as sender_email,
@@ -61,7 +61,7 @@ router.get('/conversations/:userId', authenticateToken, (req, res) => {
             [currentUserId, otherUserId, otherUserId, currentUserId]
         );
 
-        db.query(
+        await db.query(
             "UPDATE messages SET is_read = 1 WHERE receiver_id = ? AND sender_id = ? AND is_read = 0",
             [currentUserId, otherUserId]
         );
@@ -74,9 +74,9 @@ router.get('/conversations/:userId', authenticateToken, (req, res) => {
 });
 
 // Get all user conversations
-router.get('/conversations', authenticateToken, (req, res) => {
+router.get('/conversations', authenticateToken, async (req, res) => {
     try {
-        const conversations = db.query(
+        const conversations = await db.query(
             `SELECT m.*,
                 CASE WHEN m.sender_id = ? THEN m.receiver_id ELSE m.sender_id END as other_user_id,
                 u.first_name || ' ' || u.last_name as other_user_name,
@@ -97,9 +97,9 @@ router.get('/conversations', authenticateToken, (req, res) => {
 });
 
 // Get unread messages count
-router.get('/unread-count', authenticateToken, (req, res) => {
+router.get('/unread-count', authenticateToken, async (req, res) => {
     try {
-        const result = db.query(
+        const result = await db.query(
             'SELECT COUNT(*) as unread_count FROM messages WHERE receiver_id = ? AND is_read = 0',
             [req.user.userId]
         );
@@ -111,15 +111,15 @@ router.get('/unread-count', authenticateToken, (req, res) => {
 });
 
 // Mark message as read
-router.put('/:messageId/read', authenticateToken, (req, res) => {
+router.put('/:messageId/read', authenticateToken, async (req, res) => {
     try {
-        const messageCheck = db.query('SELECT * FROM messages WHERE id = ? AND receiver_id = ?', [req.params.messageId, req.user.userId]);
+        const messageCheck = await db.query('SELECT * FROM messages WHERE id = ? AND receiver_id = ?', [req.params.messageId, req.user.userId]);
         if (messageCheck.rows.length === 0) {
             return res.status(404).json({ success: false, error: { code: 'MESSAGE_NOT_FOUND', message: 'Message not found' } });
         }
 
-        db.query("UPDATE messages SET is_read = 1 WHERE id = ?", [req.params.messageId]);
-        const result = db.query('SELECT * FROM messages WHERE id = ?', [req.params.messageId]);
+        await db.query("UPDATE messages SET is_read = 1 WHERE id = ?", [req.params.messageId]);
+        const result = await db.query('SELECT * FROM messages WHERE id = ?', [req.params.messageId]);
         res.json({ success: true, data: { message: result.rows[0] } });
     } catch (error) {
         console.error('Mark message read error:', error);

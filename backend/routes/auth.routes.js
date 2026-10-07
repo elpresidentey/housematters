@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ success: false, error: { code: 'VALIDATION_ERROR', message: 'Email, password, and name are required' } });
         }
 
-        const existingUser = db.query('SELECT * FROM users WHERE email = ?', [email]);
+        const existingUser = await db.query('SELECT * FROM users WHERE email = ?', [email]);
         if (existingUser.rows.length > 0) {
             return res.status(400).json({ success: false, error: { code: 'USER_EXISTS', message: 'A user with this email already exists' } });
         }
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         const firstName = name.split(' ')[0] || name;
         const lastName = name.split(' ').slice(1).join(' ') || '';
 
-        db.query('INSERT INTO users (id, email, password_hash, role, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?)', [id, email, hashedPassword, userType || 'tenant', firstName, lastName]);
+        await db.query('INSERT INTO users (id, email, password_hash, role, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?)', [id, email, hashedPassword, userType || 'tenant', firstName, lastName]);
 
         const token = jwt.sign({ userId: id, email: email, name: `${firstName} ${lastName}`.trim(), userType: userType || 'tenant' }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.status(201).json({ success: true, data: { user: { id, email, name, userType: userType || 'tenant' }, token } });
@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ success: false, error: { code: 'VALIDATION_ERROR', message: 'Email and password are required' } });
         }
 
-        const result = db.query('SELECT * FROM users WHERE email = ?', [email]);
+        const result = await db.query('SELECT * FROM users WHERE email = ?', [email]);
         const user = result.rows[0];
         if (!user) {
             return res.status(401).json({ success: false, error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' } });
@@ -70,7 +70,7 @@ router.get('/me', async (req, res) => {
         }
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const result = db.query('SELECT id, email, first_name, last_name, role, created_at FROM users WHERE id = ?', [decoded.userId]);
+        const result = await db.query('SELECT id, email, first_name, last_name, role, created_at FROM users WHERE id = ?', [decoded.userId]);
         if (result.rows.length === 0) {
             return res.status(404).json({ success: false, error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
         }

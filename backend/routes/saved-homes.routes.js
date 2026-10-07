@@ -5,9 +5,9 @@ const db = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 
 // Get user's saved homes
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
-        const result = db.query(
+        const result = await db.query(
             `SELECT p.*, sh.created_at as saved_at
             FROM saved_homes sh
             JOIN properties p ON sh.property_id = p.id
@@ -23,7 +23,7 @@ router.get('/', authenticateToken, (req, res) => {
 });
 
 // Save a property
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     try {
         const { propertyId } = req.body;
 
@@ -31,12 +31,12 @@ router.post('/', authenticateToken, (req, res) => {
             return res.status(400).json({ success: false, error: { code: 'MISSING_FIELD', message: 'propertyId is required' } });
         }
 
-        const propertyCheck = db.query('SELECT id FROM properties WHERE id = ?', [propertyId]);
+        const propertyCheck = await db.query('SELECT id FROM properties WHERE id = ?', [propertyId]);
         if (propertyCheck.rows.length === 0) {
             return res.status(404).json({ success: false, error: { code: 'PROPERTY_NOT_FOUND', message: 'Property not found' } });
         }
 
-        const existing = db.query(
+        const existing = await db.query(
             'SELECT id FROM saved_homes WHERE user_id = ? AND property_id = ?',
             [req.user.userId, propertyId]
         );
@@ -45,7 +45,7 @@ router.post('/', authenticateToken, (req, res) => {
         }
 
         const id = uuidv4();
-        db.query(
+        await db.query(
             'INSERT INTO saved_homes (id, user_id, property_id) VALUES (?, ?, ?)',
             [id, req.user.userId, propertyId]
         );
@@ -58,9 +58,9 @@ router.post('/', authenticateToken, (req, res) => {
 });
 
 // Unsave a property
-router.delete('/:propertyId', authenticateToken, (req, res) => {
+router.delete('/:propertyId', authenticateToken, async (req, res) => {
     try {
-        const result = db.query(
+        const result = await db.query(
             'DELETE FROM saved_homes WHERE user_id = ? AND property_id = ?',
             [req.user.userId, req.params.propertyId]
         );

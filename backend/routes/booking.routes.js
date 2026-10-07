@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
 const db = require('../config/database');
@@ -6,11 +6,11 @@ const { v4: uuidv4 } = require('uuid');
 const { notify } = require('./notification.routes');
 
 // Create a booking request
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     try {
         const { propertyId, startDate, endDate, notes } = req.body;
 
-        const propertyCheck = db.query(
+        const propertyCheck = await db.query(
             'SELECT landlord_id FROM properties WHERE id = ? AND active = 1',
             [propertyId]
         );
@@ -24,14 +24,14 @@ router.post('/', authenticateToken, (req, res) => {
         }
 
         const id = uuidv4();
-        db.query(
+        await db.query(
             'INSERT INTO bookings (id, tenant_id, property_id, requested_date, notes, status) VALUES (?, ?, ?, ?, ?, ?)',
             [id, req.user.userId, propertyId, startDate, notes || '', 'pending']
         );
 
-        const result = db.query('SELECT * FROM bookings WHERE id = ?', [id]);
-        const property = db.query('SELECT title, landlord_id FROM properties WHERE id = ?', [propertyId]).rows[0];
-        notify(
+        const result = await db.query('SELECT * FROM bookings WHERE id = ?', [id]);
+        const property = await db.query('SELECT title, landlord_id FROM properties WHERE id = ?', [propertyId]).rows[0];
+        await notify(
             property.landlord_id,
             'booking_request',
             'New booking request',
@@ -46,9 +46,9 @@ router.post('/', authenticateToken, (req, res) => {
 });
 
 // Get user's bookings (as tenant)
-router.get('/my-bookings', authenticateToken, (req, res) => {
+router.get('/my-bookings', authenticateToken, async (req, res) => {
     try {
-        const result = db.query(
+        const result = await db.query(
             `SELECT b.*, p.title as property_title, p.images as property_images, p.address as property_address, p.city as property_city
             FROM bookings b
             JOIN properties p ON b.property_id = p.id
@@ -64,14 +64,14 @@ router.get('/my-bookings', authenticateToken, (req, res) => {
 });
 
 // Get property bookings (as owner)
-router.get('/property/:propertyId', authenticateToken, (req, res) => {
+router.get('/property/:propertyId', authenticateToken, async (req, res) => {
     try {
-        const propertyCheck = db.query('SELECT landlord_id FROM properties WHERE id = ?', [req.params.propertyId]);
+        const propertyCheck = await db.query('SELECT landlord_id FROM properties WHERE id = ?', [req.params.propertyId]);
         if (propertyCheck.rows.length === 0 || propertyCheck.rows[0].landlord_id !== req.user.userId) {
             return res.status(403).json({ success: false, error: { code: 'NOT_AUTHORIZED', message: 'Not authorized' } });
         }
 
-        const result = db.query(
+        const result = await db.query(
             `SELECT b.*, u.first_name || ' ' || u.last_name as tenant_name, u.email as tenant_email
             FROM bookings b
             JOIN users u ON b.tenant_id = u.id
@@ -87,14 +87,14 @@ router.get('/property/:propertyId', authenticateToken, (req, res) => {
 });
 
 // Update booking status (approve/reject)
-router.put('/:id/status', authenticateToken, (req, res) => {
+router.put('/:id/status', authenticateToken, async (req, res) => {
     try {
         const { status } = req.body;
         if (!['confirmed', 'cancelled', 'completed'].includes(status)) {
             return res.status(400).json({ success: false, error: { code: 'INVALID_STATUS', message: 'Invalid status' } });
         }
 
-        const bookingCheck = db.query(
+        const bookingCheck = await db.query(
             `SELECT p.landlord_id FROM bookings b JOIN properties p ON b.property_id = p.id WHERE b.id = ?`,
             [req.params.id]
         );
@@ -107,15 +107,15 @@ router.put('/:id/status', authenticateToken, (req, res) => {
             return res.status(403).json({ success: false, error: { code: 'NOT_AUTHORIZED', message: 'Not authorized' } });
         }
 
-        db.query("UPDATE bookings SET status = ?, confirmed_at = datetime('now') WHERE id = ?", [status, req.params.id]);
+        await db.query("UPDATE bookings SET status = ?, confirmed_at = now() WHERE id = ?", [status, req.params.id]);
 
-        const detail = db.query(
+        const detail = await db.query(
             `SELECT b.*, p.title as property_title, p.landlord_id
              FROM bookings b JOIN properties p ON b.property_id = p.id WHERE b.id = ?`,
             [req.params.id],
         ).rows[0];
         const targetId = status === 'cancelled' ? detail.tenant_id : detail.landlord_id;
-        notify(
+        await notify(
             targetId,
             `booking_${status}`,
             `Booking ${status}`,
@@ -123,11 +123,11 @@ router.put('/:id/status', authenticateToken, (req, res) => {
             '/dashboard',
         );
         if (status === 'confirmed') {
-          notify(detail.tenant_id, 'booking_confirmed', 'Booking confirmed', `${detail.property_title} was confirmed by the landlord.`, '/dashboard');
-          notify(detail.landlord_id, 'booking_agreed', 'Next step', 'Create the tenancy agreement for this booking.', '/dashboard');
+          await notify(detail.tenant_id, 'booking_confirmed', 'Booking confirmed', `${detail.property_title} was confirmed by the landlord.`, '/dashboard');
+          await notify(detail.landlord_id, 'booking_agreed', 'Next step', 'Create the tenancy agreement for this booking.', '/dashboard');
         }
 
-        const result = db.query('SELECT * FROM bookings WHERE id = ?', [req.params.id]);
+        const result = await db.query('SELECT * FROM bookings WHERE id = ?', [req.params.id]);
         res.json({ success: true, data: { booking: result.rows[0] } });
     } catch (error) {
         console.error('Update booking status error:', error);
