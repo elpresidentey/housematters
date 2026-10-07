@@ -5,7 +5,7 @@ Two Vercel projects, deployed from the same GitHub repo:
 | Project | Root directory | What it serves |
 | --- | --- | --- |
 | `frontend` | `frontend` | Next.js 16 site |
-| `backend` | `backend` | Express API on Supabase Postgres |
+| `housematters-api` | `backend` | Express API on Supabase Postgres |
 
 Each has its own `vercel.json`. The frontend proxies `/api/*` and `/uploads/*` to
 the backend, so the browser only ever talks to the frontend origin and CORS stays
@@ -13,7 +13,10 @@ out of the way.
 
 ## One-time setup
 
-1. Create a `backend` Vercel project with the Root Directory set to `backend`.
+1. Create a `housematters-api` Vercel project with the Root Directory set to
+   `backend`, and connect it (and `frontend`, Root Directory `frontend`) to this
+   GitHub repo on the `main` branch. The root directory has to be set on the
+   project, otherwise the build runs at the repo root and the wrong app is built.
 2. Create a Supabase project and run the schema against it:
 
    ```bash
@@ -26,7 +29,7 @@ out of the way.
 
 ## Environment variables
 
-### `backend` project
+### `housematters-api` project
 
 | Variable | Notes |
 | --- | --- |
@@ -44,14 +47,27 @@ disk, which is what you want for `npm run dev` and useless on Vercel.
 
 | Variable | Notes |
 | --- | --- |
-| `API_URL` | Origin of the deployed backend, e.g. `https://backend.vercel.app`. **Required** in production. |
+| `API_URL` | Origin of the deployed API, e.g. `https://housematters-api.vercel.app`. **Required** in production. |
 
 `API_URL` is read at build time, so it must be set on the project, not just in
 preview builds. When it is missing the build logs a warning and `/api/*` is not
 rewritten, which is why the site falls back to its bundled sample listings.
 
-Add environment variables with `vercel env add <NAME> production` from the
-relevant directory, or in Project Settings → Environment Variables.
+Add environment variables non-interactively, one variable per command:
+
+```bash
+vercel env add NAME production --value '<the value>' --project <project>
+```
+
+Do **not** pipe a multi-line `.env` file into `vercel env add`: the whole file is
+stored as one variable's value. That is how `DATABASE_URL` ended up with
+`JWT_SECRET=...NODE_ENV=production` glued onto the end of it, which Postgres
+reports as `Invalid format for user or db_name`. Verify with
+`vercel env pull --environment=production --project <project>` and read the file.
+
+Changing an environment variable does not redeploy anything. Push a commit or
+run `vercel deploy --prod` afterwards, from the repository root so the project's
+Root Directory applies.
 
 ## Deploying
 
@@ -61,9 +77,9 @@ Push to `main` and both projects rebuild:
 git push origin main
 ```
 
-Deploy the backend first, confirm `https://<backend-domain>/health` returns
-`{"status":"OK", ...}` with `database.connected: true`, then set `API_URL` on the
-frontend to that domain and redeploy it.
+Deploy the API first, confirm `https://housematters-api.vercel.app/health`
+returns `{"status":"OK", ...}` with `database.connected: true`, then set
+`API_URL` on the frontend to that domain and redeploy it.
 
 ## Local development
 
@@ -82,3 +98,6 @@ cd frontend && npm run dev   # http://localhost:5173
   real rate limit in front of the API for anything stricter.
 - `npm run seed` truncates all data. `supabase-setup.js` is the safer path: it
   creates the schema if absent and skips seeding when properties already exist.
+- Image uploads need `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` on
+  `housematters-api`. Without them every upload fails with "image storage is
+  unconfigured" rather than silently writing to the read-only serverless bundle.
