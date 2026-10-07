@@ -44,6 +44,13 @@ function publicUrl(key) {
  */
 async function putImage(buffer, key, contentType) {
   if (!useSupabase) {
+    // Serverless disks are read-only, so writing there always fails. Say so
+    // plainly instead of surfacing an fs error from deep inside multer.
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      throw new Error(
+        'Image storage is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.',
+      );
+    }
     ensureLocalDir();
     fs.writeFileSync(path.join(LOCAL_DIR, key), buffer);
     return { url: `/uploads/${key}`, key, storage: 'local' };
